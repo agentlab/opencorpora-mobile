@@ -5,13 +5,13 @@
 
 Описание методов API: http://docs.opencorporaapi.apiary.io/#
 
-Билд на Travis-CI https://travis-ci.org/Roenke/opencorpora-mobile
+Билд на Travis-CI: https://travis-ci.org/Roenke/opencorpora-mobile
 
-##### Requirements:
-* JDK 7
-* sdk: 23 
+##### Требования:
+* JDK: 7
+* Android api: 16
 * build-tools: 23.0.2
-* gradle: 2.3
 
-##### Build instructions:
-* Windows/Linux/OS X: Install Android studio. File -> New -> Import Project. Or just run opencorpora/gradlew.
+##### Инструкция к сборке:
+* Windows: opencorpora/graglew.bat
+* Linux/OS X: opencorpora/graglew
