@@ -1,0 +1,19 @@
+language: android
+android:
+  components:
+    - tools
+    - build-tools-23.0.2
+    - android-23
+    - extra-android-m2repository
+
+
+before_script: cd opencorpora
+
+script: gradle build
+
+before_cache:
+    - rm -f $HOME/opencorpora/.gradle/caches/modules-2/modules-2.lock
+cache:
+  directories:
+    - $HOME/opencorpora/.gradle/caches/
+    - $HOME/opencorpora/.gradle/wrapper/

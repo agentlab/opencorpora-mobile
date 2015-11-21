@@ -1,0 +1,42 @@
+FORMAT: 1A
+HOST: http://opencorpora.org/
+
+# OpenCorporaAPI
+
+Polls is a simple API allowing consumers to view polls and vote in them.
+
+## Task Collection [/task/{type}&{count}&{complexity}]
+
+### Pull tasks [GET]
+
++ Parameters
+    + type (required, number, `1`) ... Type of tasks
+    + count (required, number, `10`) ... Tasks count.
+    + complexity (optional, number, `5`) ... Complexity of tasks.
+    
++ Response 200 (application/json)
+
+    + Attributes (object)
+        + id: 123 (number)
+        + type: "type_name" (string) - name of task type
+        + complexity : 10 (number) - Complexity of tasks
+
+            A positive integer between 1 and 100 that represents the discount the coupon will apply.
+
+        + redeem_by (number) - Date after which the coupon can no longer be redeemed
+        
+        + Body 
+        
+            {
+                "id": 123, 
+                "type" : "noun", 
+                "complexity": 5, 
+                "text": "Solve it", 
+                "choice": [
+                    "noun",
+                    ";dflgk",
+                    "lkdjg"
+                ]
+            }
+
+
