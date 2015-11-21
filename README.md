@@ -9,9 +9,9 @@
 
 ##### Требования:
 * JDK: 7
-* Android api: 16
+* android sdk: 23
 * build-tools: 23.0.2
 
 ##### Инструкция к сборке:
-* Windows: opencorpora/graglew.bat
-* Linux/OS X: opencorpora/graglew
+* Windows: Перейти в opencorpora, запустить graglew.bat
+* Linux/OS X: cd opencorpora & ./graglew
