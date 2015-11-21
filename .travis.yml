@@ -9,7 +9,8 @@ android:
 
 before_script: cd opencorpora
 
-script: gradle build
+script:
+    - ./gradlew --console plain assemble lint
 
 before_cache:
     - rm -f $HOME/opencorpora/.gradle/caches/modules-2/modules-2.lock
