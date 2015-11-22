@@ -19,7 +19,7 @@ script:
 
 after_success:
     - cd ..
-    - ./share_debug_apk.sh
+    - "[ \"$TRAVIS_BRANCH\" = 'master' ] && ./share_debug_apk.sh"
 
 before_cache:
     - rm -f $HOME/opencorpora/.gradle/caches/modules-2/modules-2.lock
