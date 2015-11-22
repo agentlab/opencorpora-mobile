@@ -6,11 +6,20 @@ android:
     - android-23
     - extra-android-m2repository
 
+env:
+    global:
+        - secure: "R0J7K1zcdtG+g5CKra7f8xcdgDeVKq+OMcE1Ld77FrKT6RCwXXswiTn3DxOxPB9/h/f4aLApo7jX0KKv8nOAqSA4V6VVcOaQzgKc5B+Rd7+4qdci1KKt3B0Sbf2cqd8pKHPnHouk974TT4jVr4/HHuEMfyYXvIZxUPbAmSyZi1onP5VAnZMt0e7gWTo2XzOq5FSZ9UPYVUs833Q9PcXfez23D5AG2aYKd7zUAO5Pd41tLKjRHvI5IotEn+Qj/i1r898YId+M3UWkcqaxOY+X0/N0jIyntCFcIhQ5kaAmFyQsS8eKM2lckLEdOmUgFk7rcIZ7Lam9374mWpRl3YWBNxWdQKWyaWb3Z+pO+1baS1dcYoWsDbjQYqHvd1xXz1cAtoR+ZWLGTI/QeSUdbJDxRLqzI5Oa6UV79na5FhJF6M/5h7H5G55jOyMrzrdgTiLIKXUGq9kFA0rQiLrfyg2HnRJaEFyuKLRywhSeGcbCw2seI5ekvr7iOp8p2lCt/dSBVmc3TmL4apeuQbwMN0x3haD/RFwmSFGTG9iWv5rB1C/SXPT8VH1Z5mpUyLdKEQ0KuVjewKYX4k8YSdz+wUcugxlPKySgmuu0bOvp2Lw8Dw2RG23YuzPUJl1VTHntjRj98sa2+x4siEM1BXD87zzJyJiGaiLaaVSkhUCE99A0Wn8="
+        - DEBUG_APK_PATH=opencorpora/build/outputs/apk/opencorpora-debug.apk
+        - DROPBOX_APK_PATH=opencorpora-debug.apk
 
 before_script: cd opencorpora
 
 script:
     - ./gradlew --console plain assemble lint
+
+after_success:
+    - cd ..
+    - ./share_debug_apk.sh
 
 before_cache:
     - rm -f $HOME/opencorpora/.gradle/caches/modules-2/modules-2.lock
