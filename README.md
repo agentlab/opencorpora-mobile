@@ -7,6 +7,10 @@
 
 Билд на Travis-CI: https://travis-ci.org/Roenke/opencorpora-mobile
 
+Отладочную версию приложения с&nbsp;последней успешной сборки кода
+из&nbsp;master можно скачать по&nbsp;ссылке:
+https://www.dropbox.com/s/um8fa0af3ac5x7y/opencorpora-debug.apk?dl=0
+
 ##### Требования:
 * JDK: 7
 * android sdk: 23
