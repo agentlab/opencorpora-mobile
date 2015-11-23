@@ -17,5 +17,5 @@ https://www.dropbox.com/s/um8fa0af3ac5x7y/opencorpora-debug.apk?dl=0
 * build-tools: 23.0.2
 
 ##### Инструкция к сборке:
-* Windows: `cd opencorpora && graglew.bat build`
-* Linux/OS X: `cd opencorpora && ./graglew build`
+* Windows: `cd opencorpora && gradlew.bat build`
+* Linux/OS X: `cd opencorpora && ./gradlew build`
