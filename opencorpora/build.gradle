@@ -15,7 +15,7 @@ android {
     buildToolsVersion "23.0.2"
 
     lintOptions {
-        disable 'MissingApplicationIcon'
+        disable 'MissingApplicationIcon', 'AllowBackup'
 
         warningsAsErrors true
         textReport true
