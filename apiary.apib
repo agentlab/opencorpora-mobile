@@ -1,28 +1,42 @@
 FORMAT: 1A
-HOST: http://opencorpora.org/
+HOST: http://opencorpora.org/api
 
 # OpenCorporaTest api
 
 Description of API methods
 
+
 ## Types collection [/types/uid={uid}&token={token}]
 
 ### Pull types [GET]
 
+<!-- Data structure description
+
+## Task type (object)
+    + type_id (number) - Positive integer Identity
+    + name (string) - String describes task
+    + complexity (number) - Positive integer from 0 to N, describes complexity of this task type
+
+## Task types (object) 
+    + count (number) - Count of task types in field items
+    + items (array(Task type)) - Array of Task types
+-->
+
 + Parameters
     + uid (required, number, `123456`) ... User identity
-    + token (required, string, `kj54hb6lkj54kl456`) ... Auth token
+    + token (required, string, `12343534`) ... Auth token
 
 + Response 200 (application/json)
-    + Body
 
+    + Body
+        
             {
                 "count": 2,
-                "items": [
+                 "items": [
                     {
                         "type_id": 1,
                         "name": "Прилагательное, мн.ч.: именительный / винительный",
-                        "complexity": 10
+                         "complexity": 10
                     },
                     {
                         "type_id": 2,
@@ -32,19 +46,31 @@ Description of API methods
                 ]
             }
 
+
 ## Task Collection [/task/uid={uid}&type={type}&count={count}&token={token}]
 
-
 ### Pull tasks [GET]
+
+<!--## Task (object)
+    +  id (number) - Task identity. Positive integer
+    +  lcontext (string) - Left context
+    +  rcontext (string) - Right context
+    +  has_instruction (boolean) - Flag indicates that instruction is available
+    +  choices (array(object)) - Variants of answer. Map int => string
+
+## Tasks (object) 
+    + count (number) - Count of Task object in items
+    + items (array(Task)) - Array of Task
 
 + Parameters
     + uid (required, number, `2133`) ... User identity
     + type (required, number, `1`) ... Task type identity
-    + count (required, number, `10`) ... Max count of tasks in response
-    + token (required, string, `kj54hb6lkj54kl456`) ... Auth token
+    + count (optional, number, `10`) ... Max count of tasks in response
+    + token (required, number, `12343534`) ... Auth token -->
     
 + Response 200 (application/json)
-    
+
+
     + Body 
 
             {
@@ -78,16 +104,31 @@ Description of API methods
 
 ### Actualize [POST]
 
+<!-- 
+## Ready task (object)
+    + id (number) - Task identity. Positive integer
+    + answer (number) - Number of user answer on some task. -1 if task skipped, 99 if other answer
+    + before_time (number) - Seconds before user submit answer. Positive integer
+    + lcontext_showed (boolean) - Logical value indicates that left context showed
+    + rcontext_showed (boolean) - Logical value indicates that right context showed
+    + commented (boolean) - Logical value indicates user comment this task
+    + comment_test (string) - Comment. Can be null
+
+## Ready tasks (object)
+    + count (number) - Count of ready tasks in request
+    + items (array(Ready task)) - Ready task array -->
+
 + Parameters 
     + uid (required, number, `123456`) ... User identity
-    + token (required, string, `kj54hb6lkj54kl456`) ... Auth token
+    + token (required, string, `12343534`) ... Auth token
+-->
 
 + Request (application/json)
     
     + Body
 
             {
-                "count": 3
+                "count": 3,
                 "items": [
                     123,
                     145,
@@ -111,7 +152,7 @@ Description of API methods
 
 + Parameters 
     + uid (required, number, `123456`) ... User identity
-    + token (required, string, `kj54hb6lkj54kl456`) ... Auth token
+    + token (required, string, `12343534`) ... Auth token
 
 + Request (application/json)
     
@@ -150,4 +191,5 @@ Description of API methods
             {
                 "count": 1
             }
+
 
