@@ -1,43 +1,60 @@
 FORMAT: 1A
 HOST: http://opencorpora.org/
 
-# OpenCorporaTest api
+# OpenCorpora
 
 Описание методов API OpenCorpora для мобильного приложения
 
-<!-- Предпочтительнее [/api/auth.php] -->
-## Login [/api.php/?action={action}] 
-### Authentication [POST]
-Возвращает токен для авторизации
+## Авторизация [POST /api.php?action=login]
 
-+ Parameters
-    + action (required, string) ... Запрашиваемое действие
+Возвращает временный токен для дальнейшей аутентификации пользователя.
 
+Адрес и поведение скопированы из существующей версии API.  Наверное, для
+единообразия стоило бы сделать авторизацию по образу и подобию других методов.
+
++ Attributes
+    + login JIoJkHoHoJka (string, required) - Логин пользователя
+    + password qwerty (string, required) - Пароль пользователя
 
 + Response 200 (application/json)
     + Body
-    
+
             {
-                "api_version":"0.3",
-                "answer":{
-                  "token":458466977
+                "api_version": "0.3",
+                "answer": {
+                  "token": 458466977
                 },
-                "error":null
+                "error": null
             }
 
++ Response 401 (application/json)
+    + Body
 
-## Types collection [/api/get_types.php/?uid={uid}&token={token}]
-### Pull types [GET]
+            {
+                "api_version": "0.3",
+                "answer": {
+                },
+                "error": "Неверный логин или пароль"
+            }
+
+## Получение типов задач [GET /api/get_types.php?uid={uid}&token={token}]
+
 Возвращает доступные типы задач
 
 + Parameters
-    + uid (required, string, `123456`) ... Идентификатор пользователя
-    + token (required, string, `12343534`) ... Токен авторизации
-
+    + uid: `123` (string, required) ... Идентификатор пользователя
+    + token: `123456789` (string, required) ... Секретный токен
 
 + Response 200 (application/json)
+    + Поля ответа:
+        + `items: array[TaskType]` — Массив типов задач
+    + Тип задач — `TaskType`:
+        + `type_id: number` — Идентификатор типа
+        + `name: string` — Название задачи
+        + `complexity: number` — Сложность
+
     + Body
-        
+
             {
                  "items": [
                     {
@@ -53,19 +70,32 @@ HOST: http://opencorpora.org/
                 ]
             }
 
-+ Response 401
-        
-## Task Collection [/api/get_tasks.php/?uid={uid}&type={type}&count={count}&token={token}] 
-### Pull tasks [GET]
-Возвращает задачи для выполнения
++ Response 401 (text/plain)
+
+        Токен аутентификации не опознан
+
+## Получение задач [GET /api/get_tasks.php?uid={uid}&token={token}&type={type}&count={count}]
+
+Возвращает задачи для выполнения. В случае, когда запрашивается слишком много
+задач, возвращает какое-то их максимальное число.
+
 + Parameters
     + uid (required, string, `2133`) ... Идентификатор пользователя
+    + token (required, string, `12343534`) ... Токен аутентификации
     + type (required, number, `1`) ... Тип задач
     + count (optional, number, `10`) ... Количество запрашиваевых задач
-    + token (required, string, `12343534`) ... Токен авторизации
 
 + Response 200 (application/json)
-    + Body 
+    + Поля ответа:
+        + `items: array[Task]` — Массив задач
+    + Задача — `Task`:
+        +  `id: number` — Идентификатор задачи
+        +  `lcontext: string` — Левый контекст
+        +  `rcontext: string` — Правый контекст
+        +  `has_instruction: boolean` — Флаг наличия инструкции
+        +  `choices: array[number -> string]` — варианты ответа
+
+    + Body
 
             {
                 "items": [
@@ -92,8 +122,14 @@ HOST: http://opencorpora.org/
                     }
                 ]
             }
-            
 
++ Response 400 (text/plain)
+
+        Указан несуществующий тип задачи или некорректное число задач
+
++ Response 401 (text/plain)
+
+        Токен аутентификации не опознан
 
 ## Actual [/api/post_actual.php/?uid={uid}&token={token}]
 ### Actual [POST]
@@ -156,18 +192,21 @@ HOST: http://opencorpora.org/
             }
 
 + Response 200 (application/json)
-
     + Body
-    
+
             {
                 "accepted_count": 1
             }
 
 # Data structures
+
+## Task types
+    + items (array[Task type], required) - Массив типов задач
+
 ## Task type (object)
-    + type_id (number) - Идентификатор типа. Целое положительное число
-    + name (string) - Название задачи.
-    + complexity (number) - Сложность 0 to N задач такого тип
+    + type_id (number, required) - Идентификатор типа, целое положительное число
+    + name (string, required) - Название задачи
+    + complexity (number, required) - Сложность 0 to N задач такого типа
 
 ## Task (object)
     +  id (number) - Идентификатор задачи
@@ -175,7 +214,7 @@ HOST: http://opencorpora.org/
     +  rcontext (string) - Правый контекст
     +  has_instruction (boolean) - Флаг наличия инструкции
     +  choices (array(object)) - Варианты ответа. Map int => string
-    
+
 ## Ready task (object)
     + id (number) - Идентификатор задачи. Положительное целое число
     + answer (number) - Номер ответа. -1 если задача пропущена 99, если ответ "другую"
