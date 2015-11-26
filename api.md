@@ -1,6 +1,6 @@
 #### Описание методов API OpenCorpora для мобильного приложения
 
-##### Авторизация `[POST]` `[/api.php/?action={action}]`
+##### Авторизация `[POST]` `[/api.php?action={action}]`
 
 + Параметры
   + `action` (`required, string`) - Название действия. Для авторизации равно `login`
@@ -10,8 +10,9 @@
   
 + Ответ `200`. (В случае неудачи полу `answer` имеет значение `null`, в поле `error` содержится текст ошибки)
   + Поля ответа:
-    + `api_version` (`string`) - Версия api
-    + `answer` (`object`) - Ответ сервера 
+    + `api_version` (`string`) - Версия API
+    + `answer` (`object`) - Ответ сервера
+      + `token` (`string`) - Секрытный токет от сервера, используемый для дальнейшей авторизации.
     + `error` (`string`) - Описание ошибки
 ```
 {
@@ -24,8 +25,7 @@
 ```
 
 
-
-##### Получение типов задач `[GET]` `[/api/get_types.php/?uid={uid}&token={token}]`
+##### Получение типов задач `[GET]` `[/api/get_types.php?uid={uid}&token={token}]`
 + Парамеры
     + `uid` (`required, string`) - Идентификатор пользователя
     + `token` (`required, string`) - Токен авторизации
@@ -55,9 +55,7 @@
 + Ответ `400 Bad Request` - Указан несуществующий тип задачи
 + Ответ `401 Unauthorized` - Токен авторизации устарел
 
-
-
-##### Получение задач `[GET]` `[/api/get_tasks.php/?uid={uid}&type={type}&count={count}&token={token}]`
+##### Получение задач `[GET]` `[/api/get_tasks.php?uid={uid}&type={type}&count={count}&token={token}]`
 + Парамеры
     + `uid` (`required, string`) - Идентификатор пользователя
     + `type` (`required, number`) - Тип задач
@@ -104,9 +102,7 @@
 + Ответ `400 Bad Request` - Указан несуществующий тип задачи `type` или некорректное число задач `count`
 + Ответ `401 Unauthorized` - Токен авторизации устарел
 
-
-
-##### Актуализация `[POST]` `[/api/post_actual.php/?uid={uid}&token={token}]`
+##### Актуализация `[POST]` `[/api/post_actual.php?uid={uid}&token={token}]`
 + Парамеры
     + `uid` (`required, string`) - Идентификатор пользователя
     + `token` (`required, string`) - Токен авторизации
@@ -132,9 +128,7 @@
 + Ответ `400 Bad Request` - Данные в теле запроса не удалось распарсить
 + Ответ `401 Unauthorized` - Токен авторизации устарел
 
-
-
-##### Отправка задач `[POST]` `[/api/post_tasks.php/?uid={uid}&token={token}]`
+##### Отправка задач `[POST]` `[/api/post_tasks.php?uid={uid}&token={token}]`
 + Парамеры
   + `uid` (`required, string`) - Идентификатор пользователя
   + `token` (`required, string`) - Токен авторизации
@@ -175,10 +169,10 @@
 + Ответ `400 Bad Request` - Данные в теле запроса не удалось распарсить
 + Ответ `401 Unauthorized` - Токен авторизации устарел
 
-
-
-##### Получение инструкций к задачам `[GET]` `[/api/get_manual.php/?type={type}]`
+##### Получение инструкций к задачам `[GET]` `[/api/get_manual.php?type={type}]`
 + Парамеры
   + `type` (`number`) - Тип задачи, для которой понадобилась инструкция
 + Ответ `200`
   + Тело ответа содержит валидный html код без ссылок но с форматированием
++ Ответ `404`
+  + Если инструкция не найдена

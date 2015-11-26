@@ -32,8 +32,7 @@ HOST: http://opencorpora.org/
 
             {
                 "api_version": "0.3",
-                "answer": {
-                },
+                "answer": null,
                 "error": "Неверный логин или пароль"
             }
 
@@ -42,8 +41,8 @@ HOST: http://opencorpora.org/
 Возвращает доступные типы задач
 
 + Parameters
-    + uid: `123` (string, required) ... Идентификатор пользователя
-    + token: `123456789` (string, required) ... Секретный токен
+    + uid: `123` (string, required) - Идентификатор пользователя
+    + token: `123456789` (string, required) - Секретный токен
 
 + Response 200 (application/json)
     + Поля ответа:
@@ -131,8 +130,8 @@ HOST: http://opencorpora.org/
 
         Токен аутентификации не опознан
 
-## Actual [/api/post_actual.php/?uid={uid}&token={token}]
-### Actual [POST]
+## Актуализация задач [/api/post_actual.php/?uid={uid}&token={token}]
+### Актуализация [POST]
 Актуализирует задачи в базе мобильного приложения с базой сервиса
 + Parameters 
     + uid (required, string, `123456`) ... Идентификатор пользователя
@@ -157,13 +156,13 @@ HOST: http://opencorpora.org/
             }
 
 
-## Task Receiver [/api/post_tasks.php/?uid={uid}&token={token}]
+## Отправка задач [/api/post_tasks.php/?uid={uid}&token={token}]
 
-### Push [POST]
+### Отправка [POST]
 Отправляет выполненные задачи
 + Parameters 
-    + uid (required, string, `123456`) ... User identity
-    + token (required, string, `12343534`) ... Auth token
+    + uid (required, string, `123456`) ... Идентификатор пользователя
+    + token (required, string, `12343534`) ... Токен авторизации
 
 + Request (application/json)
     + Body
