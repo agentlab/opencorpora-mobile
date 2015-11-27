@@ -9,9 +9,9 @@ HOST: http://opencorpora.org/
 
 Возвращает временный токен для дальнейшей аутентификации пользователя.
 
-Адрес и поведение скопированы из существующей версии API.  Наверное, для
+Адрес и поведение скопированы из существующей версии API. Наверное, для
 единообразия стоило бы сделать авторизацию по образу и подобию других методов;
-это описано под заголовком «Альтернативная авторизация».
+она описана под заголовком «Альтернативная авторизация».
 
 + Attributes
     + login: `username` (string, required) - Логин пользователя
@@ -19,17 +19,18 @@ HOST: http://opencorpora.org/
 
 + Response 200 (application/json)
     + Поля ответа:
-        + `api_version` `(string)` - Версия API
-        + `answer` `(object)` - Ответ сервера
-          + `token` `(string)` - Секрытный токет от сервера, используемый для дальнейшей авторизации.
-        + `error` `(string)` - Описание ошибки
-    
+        + `api_version` `(string)` — Версия API
+        + `answer` `(object)` — Ответ сервера
+        + `token` `(string)` — Секретный токен от сервера, используемый для
+        дальнейшей авторизации.
+        + `error` `(string)` — Описание ошибки
+
     + Body
 
             {
                 "api_version": "0.3",
                 "answer": {
-                  "token": 458466977
+                    "token": 458466977
                 },
                 "error": null
             }
@@ -94,7 +95,7 @@ HOST: http://opencorpora.org/
 
 + Response 401 (text/plain)
 
-        Токен аутентификации не опознан
+        Токен авторизации не опознан
 
 ## Получение задач [GET /api/get_tasks.php?uid={uid}&token={token}&type={type}&count={count}]
 
@@ -103,19 +104,19 @@ HOST: http://opencorpora.org/
 
 + Parameters
     + uid: `2133` (required, string) - Идентификатор пользователя.
-    + token: `12343534` (required, string) - Токен аутентификации.
+    + token: `12343534` (required, string) - Токен авторизации.
     + type: `1` (required, number) - Тип задач.
-    + count: `10` (optional, number) - Количество запрашиваевых задач.
+    + count: `10` (optional, number) - Количество запрашиваемых задач.
 
 + Response 200 (application/json)
     + Поля ответа:
         + `items` `(array[Task])` — Массив задач
     + Задача — `Task`:
-        +  `id` `(number)` — Идентификатор задачи
-        +  `left_context` `(string)` — Левый контекст
-        +  `right_context` `(string)` — Правый контекст
-        +  `has_instruction` `(boolean)` — Флаг наличия инструкции
-        +  `choices` `(array[number -> string])` — варианты ответа
+        + `id` `(number)` — Идентификатор задачи
+        + `left_context` `(string)` — Левый контекст
+        + `right_context` `(string)` — Правый контекст
+        + `has_instruction` `(boolean)` — Флаг наличия инструкции
+        + `choices` `(array[number -> string])` — Варианты ответа
 
     + Body
 
@@ -151,19 +152,22 @@ HOST: http://opencorpora.org/
 
 + Response 401 (text/plain)
 
-        Токен аутентификации не опознан
+        Токен авторизации не опознан
 
 ## Актуализация задач [POST /api/post_actual.php?uid={uid}&token={token}]
 
 Актуализирует задачи в базе мобильного приложения с базой сервиса.
-Возвращает только те `id` из тела запроса, которые ещё являются актуальными. Так же продлевает их бронь. 
-+ Parameters 
+Возвращает только те `id` из тела запроса, которые ещё являются актуальными.
+Также продлевает их бронь.
+
++ Parameters
     + uid: `123456` (required, string) - Идентификатор пользователя
     + token: `12343534` (required, string) - Токен авторизации
 
 + Request (application/json)
     + Тело запроса `(application/json)`
-        + `items` `(array(number))` -  Массив идентификаторов задач для актуализации
+        + `items` `(array[number])` —  Массив идентификаторов задач для
+        актуализации
 
     + Body
 
@@ -177,43 +181,48 @@ HOST: http://opencorpora.org/
 
 + Response 200 (application/json)
     + Поля ответа
-        + `items` `(array(number))` - Массив задач, которые всё ещё актуальны
+        + `items` `(array[number])` — Массив всё ещё актуальных задач
 
-    + Body 
-        
-            { 
+    + Body
+
+            {
                 "items": [123]
             }
 
 + Response 400 (text/plain)
-        
+
         Некорректные данные в теле запроса
 
 + Response 401 (text/plain)
 
-        Токен аутентификации не опознан
-        
-        
+        Токен авторизации не опознан
+
 ## Отправка задач [POST /api/post_tasks.php?uid={uid}&token={token}]
+
 Отправляет выполненные задачи
-+ Parameters 
+
++ Parameters
     + uid: `123456` (required, string) - Идентификатор пользователя
     + token: `12343534` (required, string) - Токен авторизации
 
 + Request (application/json)
     + Тело запроса
-      + `items` `(array(ready_task))` - Массив выполненных задач
-    + Объект `ready_task(object)`
-      + `id` `(number)` - Идентификатор задачи
-      + `answer` `(number)` - Номер ответа. `-1` если задача пропущена `99`, если ответ "другое"
-      + `seconds_before_answer` `(number)` - Количество секунд с момента показа задания до ответа пользователя
-      + `is_left_context_showed` `(boolean)` - Был ли показан левый контекст
-      + `is_right_context_showed` `(boolean)` - Был ли показан правый контекст
-      + `is_commented` `(boolean)` - Оставил ли пользователь комментарий к заданию
-      + `comment_text` `(string)` - Текст комментария 
+        + `items` `(array[ReadyTask])` — Массив выполненных задач
+    + Выполненная задача — `ReadyTask`
+        + `id` `(number)` — Идентификатор задачи
+        + `answer` `(number)` — Номер ответа; `-1`, если задача пропущена;
+        `99`, если ответ «другое»
+        + `seconds_before_answer` `(number)` — Количество секунд с момента
+        показа задания до ответа пользователя
+        + `is_left_context_showed` `(boolean)` — Был ли показан левый контекст
+        + `is_right_context_showed` `(boolean)` — Был ли показан правый
+        контекст
+        + `is_commented` `(boolean)` — Оставил ли пользователь комментарий
+        к заданию
+        + `comment_text` `(string)` — Текст комментария
 
     + Body
-    
+
             {
                 "items": [
                     {
@@ -240,24 +249,25 @@ HOST: http://opencorpora.org/
 + Response 200 (application/json)
 
 + Response 400 (text/plain)
-        
+
         Некорректные данные в теле запроса
 
 + Response 401 (text/plain)
 
-        Токен аутентификации не опознан
-
+        Токен авторизации не опознан
 
 ## Инструкции к задачам [GET /api/get_manual.php?type={type}]
-Получает инструкцию в валидном html, который не содержит ссылок. Публичный метод, не требует токена авторизации
 
-+ Parameters 
-    + type: `1` (required, number) - Тип задачи.
+Получает инструкцию в валидном html, который не содержит ссылок. Публичный
+метод, не требует токена авторизации
+
++ Parameters
+    + type: `1` (required, number) - Тип задачи
 
 + Response 200 (text/html)
 
         <!DOCTYPE html>
 
 + Response 404 (text/plain)
-    
+
         Тип задачи не найден
