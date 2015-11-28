@@ -1,42 +1,312 @@
 FORMAT: 1A
 HOST: http://opencorpora.org/
 
-# OpenCorporaAPI
+# OpenCorpora
 
-Polls is a simple API allowing consumers to view polls and vote in them.
+Описание методов API OpenCorpora для мобильного приложения.
 
-## Task Collection [/task/{type}&{count}&{complexity}]
 
-### Pull tasks [GET]
+## Авторизация [POST /api.php?action=login]
 
-+ Parameters
-    + type (required, number, `1`) ... Type of tasks
-    + count (required, number, `10`) ... Tasks count.
-    + complexity (optional, number, `5`) ... Complexity of tasks.
-    
+Возвращает временный токен для дальнейшей аутентификации пользователя.
+
+Адрес и поведение скопированы из существующей версии API. Наверное, для
+единообразия стоило бы сделать авторизацию по образу и подобию других методов;
+она описана под заголовком «Альтернативная авторизация».
+
++ Attributes
+    + login: `username` (string, required) - Логин пользователя.
+    + password: `qwerty` (string, required) - Пароль пользователя.
+
 + Response 200 (application/json)
+    + Поля ответа:
+        + `api_version` `(string)` — Версия API.
+        + `answer` `(object)` — Ответ сервера.
+        + `token` `(string)` — Секретный токен от сервера, используемый для
+        дальнейшей авторизации.
+        + `error` `(string)` — Описание ошибки.
 
-    + Attributes (object)
-        + id: 123 (number)
-        + type: "type_name" (string) - name of task type
-        + complexity : 10 (number) - Complexity of tasks
+    + Body
 
-            A positive integer between 1 and 100 that represents the discount the coupon will apply.
-
-        + redeem_by (number) - Date after which the coupon can no longer be redeemed
-        
-        + Body 
-        
             {
-                "id": 123, 
-                "type" : "noun", 
-                "complexity": 5, 
-                "text": "Solve it", 
-                "choice": [
-                    "noun",
-                    ";dflgk",
-                    "lkdjg"
-                ]
+                "api_version": "0.3",
+                "answer": {
+                    "token": 458466977
+                },
+                "error": null
+            }
+
++ Response 401 (application/json)
+    + Body
+
+            {
+                "api_version": "0.3",
+                "answer": null,
+                "error": "Неверный логин или пароль"
             }
 
 
+## Альтернативная авторизация [POST /api/login.php]
+
+Возвращает временный токен для дальнейшей аутентификации пользователя.
+
++ Attributes
+    + login vasya (string, required) - Логин пользователя.
+    + password qwerty (string, required) - Пароль пользователя.
+
++ Response 200 (application/json)
+    + Body
+
+            {
+                "token": "3B348F2348AF391CC209AD878654AF12"
+            }
+
++ Response 401 (application/json)
+    + Body
+
+            {
+                "error": "Неверный логин или пароль"
+            }
+
+
+## Получение типов задач [GET /api/pool_types.php?uid={uid}&token={token}]
+
+Возвращает доступные типы задач
+
++ Parameters
+    + uid: `123` (string, required) - Идентификатор пользователя.
+    + token: `123456789` (string, required) - Секретный токен.
+
++ Response 200 (application/json)
+    + Поля ответа:
+        + `items` `(array[TaskType])` — Массив типов задач.
+    + Тип задач — `TaskType`:
+        + `type_id` `(number)` — Идентификатор типа.
+        + `name` `(string)` — Название задачи.
+        + `complexity` `(number)` — Сложность задач этого типа.
+
+    + Body
+
+            {
+                 "items": [
+                    {
+                        "type_id": 1,
+                        "name": "Прилагательное, мн.ч.: именительный / винительный",
+                         "complexity": 10
+                    },
+                    {
+                        "type_id": 2,
+                        "name": "Существительное, ед. ч.: родительный / дательный / предложный",
+                        "complexity": 5
+                    }
+                ]
+            }
+
++ Response 401 (application/json)
+    + Body
+
+            {
+                "error": "Токен авторизации не опознан"
+            }
+
+
+## Задачи [/api/tasks.php?uid={uid}&token={token}]
+
++ Parameters
+    + uid: `2133` (required, string) - Идентификатор пользователя.
+    + token: `12343534` (required, string) - Токен авторизации.
+
+### Получение задач [GET /api/tasks.php?uid={uid}&token={token}&type={type}&count={count}]
+
+Возвращает задачи для выполнения. В случае, когда запрашивается слишком много
+задач, возвращает какое-то их максимальное число.
+
++ Parameters
+    + uid: `2133` (required, string) - Идентификатор пользователя.
+    + token: `12343534` (required, string) - Токен авторизации.
+    + type: `1` (required, number) - Тип задач.
+    + count: `10` (optional, number) - Количество запрашиваемых задач.
+
++ Response 200 (application/json)
+    + Поля ответа:
+        + `items` `(array[Task])` — Массив задач.
+    + Задача — `Task`:
+        + `id` `(number)` — Идентификатор задачи.
+        + `left_context` `(string)` — Левый контекст.
+        + `right_context` `(string)` — Правый контекст.
+        + `has_instruction` `(boolean)` — Флаг наличия инструкции.
+        + `choices` `(array[number -> string])` — Варианты ответа.
+
+    + Body
+
+            {
+                "items": [
+                    {
+                        "id": 123,
+                        "target": "одной",
+                        "left_context": "Недопустимо , чтобы",
+                        "right_context": "из подсистем являлась сама",
+                        "has_instruction": true,
+                        "choices": [
+                            {
+                                "1": "родительный"
+                            },
+                            {
+                                "2": "дательный"
+                            },
+                            {
+                                "3": "винительный"
+                            },
+                            {
+                                "4": "предложный"
+                            }
+                        ]
+                    }
+                ]
+            }
+
++ Response 400 (application/json)
+    + Body
+
+            {
+                "error": "Указан несуществующий тип задачи или некорректное число задач"
+            }
+
++ Response 401 (application/json)
+    + Body
+
+            {
+                "error": "Токен авторизации не опознан"
+            }
+
+### Актуализация задач [POST]
+
+Актуализирует задачи в базе мобильного приложения с базой сервиса.
+Возвращает только те `id` из тела запроса, которые ещё являются актуальными.
+Также продлевает их бронь.
+
++ Request (application/json)
+    + Тело запроса `(application/json)`
+        + `items` `(array[number])` —  Массив идентификаторов задач для
+        актуализации.
+
+    + Body
+
+            {
+                "items": [
+                    123,
+                    145,
+                    3456
+                ]
+            }
+
++ Response 200 (application/json)
+    + Поля ответа
+        + `items` `(array[number])` — Массив всё ещё актуальных задач.
+
+    + Body
+
+            {
+                "items": [123]
+            }
+
++ Response 400 (application/json)
+    + Body
+
+            {
+                "error": "Некорректные данные в теле запроса"
+            }
+
++ Response 401 (application/json)
+    + Body
+
+            {
+                "error": "Токен авторизации не опознан"
+            }
+
+### Отправка задач [PUT]
+
+Отправляет выполненные задачи.
+
++ Request (application/json)
+    + Тело запроса
+        + `items` `(array[ReadyTask])` — Массив выполненных задач.
+    + Выполненная задача — `ReadyTask`
+        + `id` `(number)` — Идентификатор задачи.
+        + `answer` `(number)` — Номер ответа; `-1`, если задача пропущена;
+        `99`, если ответ «другое»
+        + `seconds_before_answer` `(number)` — Количество секунд с момента
+        показа задания до ответа пользователя.
+        + `is_left_context_showed` `(boolean)` — Был ли показан левый контекст.
+        + `is_right_context_showed` `(boolean)` — Был ли показан правый
+        контекст.
+        + `is_commented` `(boolean)` — Оставил ли пользователь комментарий
+        к заданию.
+        + `comment_text` `(string)` — Текст комментария.
+
+    + Body
+
+            {
+                "items": [
+                    {
+                        "id": 1,
+                        "answer": -1,
+                        "seconds_before_answer": 23,
+                        "is_left_context_showed": true,
+                        "is_right_context_showed": false,
+                        "is_commented": true,
+                        "comment_text": "very difficult question"
+                    },
+                    {
+                        "id": 2,
+                        "answer": 2,
+                        "seconds_before_answer": 2,
+                        "is_left_context_showed": false,
+                        "is_right_context_showed": false,
+                        "commented": false,
+                        "comment_text": null
+                    }
+                ]
+            }
+
++ Response 200 (application/json)
+
++ Response 400 (application/json)
+    + Body
+
+            {
+                "error": "Некорректные данные в теле запроса"
+            }
+
++ Response 401 (application/json)
+    + Body
+
+            {
+                "error": "Токен авторизации не опознан"
+            }
+
+
+## Инструкции [/api/manuals.php]
+
+### Общая справка [GET]
+
+Получает справку в валидном html, не содержащем ссылок. Публичный
+метод, не требует токена авторизации.
+
++ Response 200 (text/html)
+
+        <!DOCTYPE html>
+
+### Инструкции к задачам [GET /api/manuals.php?type={type}]
+
+Получает инструкцию в валидном html, который не содержит ссылок. Публичный
+метод, не требует токена авторизации.
+
++ Parameters
+    + type: `1` (required, number) - Тип задачи
+
++ Response 200 (text/html)
+
+        <!DOCTYPE html>
+
++ Response 404 (application/json)
