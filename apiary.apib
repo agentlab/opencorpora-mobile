@@ -3,7 +3,8 @@ HOST: http://opencorpora.org/
 
 # OpenCorpora
 
-Описание методов API OpenCorpora для мобильного приложения
+Описание методов API OpenCorpora для мобильного приложения.
+
 
 ## Авторизация [POST /api.php?action=login]
 
@@ -14,16 +15,16 @@ HOST: http://opencorpora.org/
 она описана под заголовком «Альтернативная авторизация».
 
 + Attributes
-    + login: `username` (string, required) - Логин пользователя
-    + password: `qwerty` (string, required) - Пароль пользователя
+    + login: `username` (string, required) - Логин пользователя.
+    + password: `qwerty` (string, required) - Пароль пользователя.
 
 + Response 200 (application/json)
     + Поля ответа:
-        + `api_version` `(string)` — Версия API
-        + `answer` `(object)` — Ответ сервера
+        + `api_version` `(string)` — Версия API.
+        + `answer` `(object)` — Ответ сервера.
         + `token` `(string)` — Секретный токен от сервера, используемый для
         дальнейшей авторизации.
-        + `error` `(string)` — Описание ошибки
+        + `error` `(string)` — Описание ошибки.
 
     + Body
 
@@ -44,37 +45,45 @@ HOST: http://opencorpora.org/
                 "error": "Неверный логин или пароль"
             }
 
+
 ## Альтернативная авторизация [POST /api/login.php]
 
 Возвращает временный токен для дальнейшей аутентификации пользователя.
 
 + Attributes
-    + login vasya (string, required) - Логин пользователя
-    + password qwerty (string, required) - Пароль пользователя
+    + login vasya (string, required) - Логин пользователя.
+    + password qwerty (string, required) - Пароль пользователя.
 
-+ Response 200 (plain/text)
++ Response 200 (application/json)
+    + Body
 
-        3B348F2348AF391CC209AD878654AF12
+            {
+                "token": "3B348F2348AF391CC209AD878654AF12"
+            }
 
-+ Response 401 (plain/text)
++ Response 401 (application/json)
+    + Body
 
-        Неверный логин или пароль
+            {
+                "error": "Неверный логин или пароль"
+            }
 
-## Получение типов задач [GET /api/get_types.php?uid={uid}&token={token}]
+
+## Получение типов задач [GET /api/pool_types.php?uid={uid}&token={token}]
 
 Возвращает доступные типы задач
 
 + Parameters
-    + uid: `123` (string, required) - Идентификатор пользователя
-    + token: `123456789` (string, required) - Секретный токен
+    + uid: `123` (string, required) - Идентификатор пользователя.
+    + token: `123456789` (string, required) - Секретный токен.
 
 + Response 200 (application/json)
     + Поля ответа:
-        + `items` `(array[TaskType])` — Массив типов задач
+        + `items` `(array[TaskType])` — Массив типов задач.
     + Тип задач — `TaskType`:
-        + `type_id` `(number)` — Идентификатор типа
-        + `name` `(string)` — Название задачи
-        + `complexity` `(number)` — Сложность задач этого типа
+        + `type_id` `(number)` — Идентификатор типа.
+        + `name` `(string)` — Название задачи.
+        + `complexity` `(number)` — Сложность задач этого типа.
 
     + Body
 
@@ -93,11 +102,21 @@ HOST: http://opencorpora.org/
                 ]
             }
 
-+ Response 401 (text/plain)
++ Response 401 (application/json)
+    + Body
 
-        Токен авторизации не опознан
+            {
+                "error": "Токен авторизации не опознан"
+            }
 
-## Получение задач [GET /api/get_tasks.php?uid={uid}&token={token}&type={type}&count={count}]
+
+## Задачи [/api/tasks.php?uid={uid}&token={token}]
+
++ Parameters
+    + uid: `2133` (required, string) - Идентификатор пользователя.
+    + token: `12343534` (required, string) - Токен авторизации.
+
+### Получение задач [GET /api/tasks.php?uid={uid}&token={token}&type={type}&count={count}]
 
 Возвращает задачи для выполнения. В случае, когда запрашивается слишком много
 задач, возвращает какое-то их максимальное число.
@@ -110,13 +129,13 @@ HOST: http://opencorpora.org/
 
 + Response 200 (application/json)
     + Поля ответа:
-        + `items` `(array[Task])` — Массив задач
+        + `items` `(array[Task])` — Массив задач.
     + Задача — `Task`:
-        + `id` `(number)` — Идентификатор задачи
-        + `left_context` `(string)` — Левый контекст
-        + `right_context` `(string)` — Правый контекст
-        + `has_instruction` `(boolean)` — Флаг наличия инструкции
-        + `choices` `(array[number -> string])` — Варианты ответа
+        + `id` `(number)` — Идентификатор задачи.
+        + `left_context` `(string)` — Левый контекст.
+        + `right_context` `(string)` — Правый контекст.
+        + `has_instruction` `(boolean)` — Флаг наличия инструкции.
+        + `choices` `(array[number -> string])` — Варианты ответа.
 
     + Body
 
@@ -146,28 +165,30 @@ HOST: http://opencorpora.org/
                 ]
             }
 
-+ Response 400 (text/plain)
++ Response 400 (application/json)
+    + Body
 
-        Указан несуществующий тип задачи или некорректное число задач
+            {
+                "error": "Указан несуществующий тип задачи или некорректное число задач"
+            }
 
-+ Response 401 (text/plain)
++ Response 401 (application/json)
+    + Body
 
-        Токен авторизации не опознан
+            {
+                "error": "Токен авторизации не опознан"
+            }
 
-## Актуализация задач [POST /api/post_actual.php?uid={uid}&token={token}]
+### Актуализация задач [POST]
 
 Актуализирует задачи в базе мобильного приложения с базой сервиса.
 Возвращает только те `id` из тела запроса, которые ещё являются актуальными.
 Также продлевает их бронь.
 
-+ Parameters
-    + uid: `123456` (required, string) - Идентификатор пользователя
-    + token: `12343534` (required, string) - Токен авторизации
-
 + Request (application/json)
     + Тело запроса `(application/json)`
         + `items` `(array[number])` —  Массив идентификаторов задач для
-        актуализации
+        актуализации.
 
     + Body
 
@@ -181,7 +202,7 @@ HOST: http://opencorpora.org/
 
 + Response 200 (application/json)
     + Поля ответа
-        + `items` `(array[number])` — Массив всё ещё актуальных задач
+        + `items` `(array[number])` — Массив всё ещё актуальных задач.
 
     + Body
 
@@ -189,37 +210,39 @@ HOST: http://opencorpora.org/
                 "items": [123]
             }
 
-+ Response 400 (text/plain)
++ Response 400 (application/json)
+    + Body
 
-        Некорректные данные в теле запроса
+            {
+                "error": "Некорректные данные в теле запроса"
+            }
 
-+ Response 401 (text/plain)
++ Response 401 (application/json)
+    + Body
 
-        Токен авторизации не опознан
+            {
+                "error": "Токен авторизации не опознан"
+            }
 
-## Отправка задач [POST /api/post_tasks.php?uid={uid}&token={token}]
+### Отправка задач [PUT]
 
-Отправляет выполненные задачи
-
-+ Parameters
-    + uid: `123456` (required, string) - Идентификатор пользователя
-    + token: `12343534` (required, string) - Токен авторизации
+Отправляет выполненные задачи.
 
 + Request (application/json)
     + Тело запроса
-        + `items` `(array[ReadyTask])` — Массив выполненных задач
+        + `items` `(array[ReadyTask])` — Массив выполненных задач.
     + Выполненная задача — `ReadyTask`
-        + `id` `(number)` — Идентификатор задачи
+        + `id` `(number)` — Идентификатор задачи.
         + `answer` `(number)` — Номер ответа; `-1`, если задача пропущена;
         `99`, если ответ «другое»
         + `seconds_before_answer` `(number)` — Количество секунд с момента
-        показа задания до ответа пользователя
-        + `is_left_context_showed` `(boolean)` — Был ли показан левый контекст
+        показа задания до ответа пользователя.
+        + `is_left_context_showed` `(boolean)` — Был ли показан левый контекст.
         + `is_right_context_showed` `(boolean)` — Был ли показан правый
-        контекст
+        контекст.
         + `is_commented` `(boolean)` — Оставил ли пользователь комментарий
-        к заданию
-        + `comment_text` `(string)` — Текст комментария
+        к заданию.
+        + `comment_text` `(string)` — Текст комментария.
 
     + Body
 
@@ -248,18 +271,36 @@ HOST: http://opencorpora.org/
 
 + Response 200 (application/json)
 
-+ Response 400 (text/plain)
++ Response 400 (application/json)
+    + Body
 
-        Некорректные данные в теле запроса
+            {
+                "error": "Некорректные данные в теле запроса"
+            }
 
-+ Response 401 (text/plain)
++ Response 401 (application/json)
+    + Body
 
-        Токен авторизации не опознан
+            {
+                "error": "Токен авторизации не опознан"
+            }
 
-## Инструкции к задачам [GET /api/get_manual.php?type={type}]
+
+## Инструкции [/api/manuals.php]
+
+### Общая справка [GET]
+
+Получает справку в валидном html, не содержащем ссылок. Публичный
+метод, не требует токена авторизации.
+
++ Response 200 (text/html)
+
+        <!DOCTYPE html>
+
+### Инструкции к задачам [GET /api/manuals.php?type={type}]
 
 Получает инструкцию в валидном html, который не содержит ссылок. Публичный
-метод, не требует токена авторизации
+метод, не требует токена авторизации.
 
 + Parameters
     + type: `1` (required, number) - Тип задачи
@@ -268,6 +309,4 @@ HOST: http://opencorpora.org/
 
         <!DOCTYPE html>
 
-+ Response 404 (text/plain)
-
-        Тип задачи не найден
++ Response 404 (application/json)
