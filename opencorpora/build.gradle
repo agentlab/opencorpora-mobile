@@ -23,14 +23,22 @@ android {
         xmlReport false
         htmlReport false
     }
+
+    buildTypes {
+        release {
+            buildConfigField "String", "server_address", '"http://opencorpora.org/"'
+            debuggable false
+        }
+
+        debug {
+            buildConfigField "String", "server_address", '"http://private-e2e8fe-opencorporaapi.apiary-mock.com/"'
+            debuggable true
+        }
+    }
 }
 
 repositories {
     jcenter()
-}
-
-dependencies {
-    compile 'joda-time:joda-time:2.7'
 }
 
 task wrapper(type: Wrapper) {
