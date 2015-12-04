@@ -1,6 +1,7 @@
 package org.opencorpora;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ public class OpenCorporaActivity extends Activity {
     public void onStart() {
         super.onStart();
         TextView textView = (TextView) findViewById(R.id.text_view);
+        startService(new Intent(this, ApiService.class));
         textView.setText("Server address: " + BuildConfig.server_address);
     }
 }
