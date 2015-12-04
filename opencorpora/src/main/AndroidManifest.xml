@@ -25,7 +25,7 @@
         </activity>
 
         <service
-            android:name=".ApiService"
+            android:name=".AuthService"
             android:enabled="true"
             android:exported="false">
         </service>
