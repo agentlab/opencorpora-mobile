@@ -27,15 +27,15 @@ public class OpenCorporaActivity extends Activity implements IAuthListener {
         String token = prefs.getString("token", "not found :(");
         Log.d("prefs result", token);
 
-        textView.setText("token received: " + token);
-
-        AuthHelper.getInstance().unsubscribe(this);
+        textView.setText(getString(R.string.TokenReceivedPrefix) + token);
+        AuthHelper.getInstance().unSubscribe(this);
     }
 
     @Override
     public void onFail() {
         TextView textView = (TextView) findViewById(R.id.text_view);
-        textView.setText("Request was failed. Token not available");
+        textView.setText(R.string.RequestFailed);
+        AuthHelper.getInstance().unSubscribe(this);
     }
 
     public void OnClick(View view){

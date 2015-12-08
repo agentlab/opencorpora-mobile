@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">OpenCorpora</string>
+    <string name="MainButtonText">Try to get token</string>
+    <string name="RequestFailed">Request was failed. Token not available</string>
+    <string name="TokenReceivedPrefix">"token received: "</string>
+    <string name="LoginActivityLabel">Авторизация</string>
 </resources>

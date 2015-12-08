@@ -9,15 +9,15 @@ import android.util.Log;
 
 import java.util.Vector;
 
-public class AuthHelper {
+class AuthHelper {
     final private String LOG_TAG = "[AuthHelper]";
 
-    private Vector<IAuthListener> mListeners;
+    final private Vector<IAuthListener> mListeners;
     private static class HelperHolder{
         public static final AuthHelper INSTANCE = new AuthHelper();
     }
 
-    public AuthHelper(){
+    private AuthHelper(){
         mListeners = new Vector<>();
     }
 
@@ -26,9 +26,6 @@ public class AuthHelper {
     }
 
     public void authorize(String login, String password, Activity context) {
-        if (context instanceof IAuthListener) {
-            subscribe((IAuthListener) context);
-        }
 
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
@@ -62,7 +59,7 @@ public class AuthHelper {
         mListeners.add(listener);
     }
 
-    public void unsubscribe(IAuthListener listener){
+    public void unSubscribe(IAuthListener listener){
         mListeners.remove(listener);
     }
 }

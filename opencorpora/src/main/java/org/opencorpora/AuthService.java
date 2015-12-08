@@ -35,11 +35,11 @@ public class AuthService extends Service {
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
                         try {
+                            Intent result = new Intent("My login action");
                             Log.i(LOG_TAG, "Request successful");
-                            Intent sendedIntent = new Intent("My login action");
-                            sendedIntent.putExtra("isSuccess", true);
-                            sendedIntent.putExtra("token", response.getString("token"));
-                            sendBroadcast(sendedIntent);
+                            result.putExtra("isSuccess", true);
+                            result.putExtra("token", response.getString("token"));
+                            sendBroadcast(result);
                             stopSelf();
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -49,9 +49,10 @@ public class AuthService extends Service {
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                         super.onFailure(statusCode, headers, throwable, errorResponse);
+                        Intent result = new Intent("My login action");
                         Log.i(LOG_TAG, "Request failed");
-                        intent.putExtra("isSuccess", false);
-                        sendBroadcast(intent);
+                        result.putExtra("isSuccess", false);
+                        sendBroadcast(result);
                         stopSelf();
                     }
                 }

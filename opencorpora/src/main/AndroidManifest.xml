@@ -24,6 +24,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/LoginActivityLabel" >аш
+        </activity>
+
         <service
             android:name=".AuthService"
             android:enabled="true"
