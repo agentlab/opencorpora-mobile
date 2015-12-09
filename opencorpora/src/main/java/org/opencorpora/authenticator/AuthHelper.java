@@ -1,4 +1,4 @@
-package org.opencorpora;
+package org.opencorpora.authenticator;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -9,7 +9,7 @@ import android.util.Log;
 
 import java.util.Vector;
 
-class AuthHelper {
+public class AuthHelper {
     final private String LOG_TAG = "[AuthHelper]";
 
     final private Vector<IAuthListener> mListeners;
@@ -23,6 +23,18 @@ class AuthHelper {
 
     public static AuthHelper getInstance(){
         return HelperHolder.INSTANCE;
+    }
+
+
+    /**
+     * @param username Имя пользователя
+     * @param password Пароль
+     * @param accountType Тип аккаунта (не используется)
+     * @return Строка с токеном, либо null, если авторизоваться не удалось
+     */
+    public String signIn(String username, String password, String accountType){
+        // Stub. Need synchronized query
+        return "sdklfjslkdfj";
     }
 
     public void authorize(String login, String password, Activity context) {
@@ -44,6 +56,8 @@ class AuthHelper {
                         listener.onFail();
                     }
                 }
+
+                context.unregisterReceiver(this);
             }
         };
 

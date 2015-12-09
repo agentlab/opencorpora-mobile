@@ -1,9 +1,9 @@
-package org.opencorpora;
+package org.opencorpora.authenticator;
 
 /**
  * Интерфейс слушателя сервиса авторизации.
  */
-interface IAuthListener {
+public interface IAuthListener {
     void onSuccess();
     void onFail();
 }

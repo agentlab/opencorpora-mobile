@@ -1,4 +1,4 @@
-package org.opencorpora;
+package org.opencorpora.authenticator;
 
 import android.app.Service;
 import android.content.Intent;
@@ -11,6 +11,7 @@ import com.loopj.android.http.RequestParams;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.opencorpora.BuildConfig;
 
 import cz.msebera.android.httpclient.Header;
 
