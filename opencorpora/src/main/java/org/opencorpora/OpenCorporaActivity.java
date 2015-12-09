@@ -45,7 +45,4 @@ public class OpenCorporaActivity extends Activity implements IAuthListener {
         AuthHelper.getInstance().authorize("login", "password", this);
         AuthHelper.getInstance().subscribe(this);
     }
-
-    public void addAccount(View view){
-    }
 }

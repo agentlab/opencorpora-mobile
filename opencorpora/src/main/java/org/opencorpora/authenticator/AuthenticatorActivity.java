@@ -23,13 +23,13 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     public final static String PARAM_USER_PASS = "USER_PASS";
 
     private final static AuthHelper sServerAuthenticate = AuthHelper.getInstance();
-    private final static String mAuthTokenType = "any_toekn_type";
-    private final AccountManager mAccountManager = AccountManager.get(this);
+    private final static String mAuthTokenType = "any_token_type";
+    private AccountManager mAccountManager;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authenticator);
-        // Set up the login form.
+        mAccountManager = AccountManager.get(this);
     }
 
     public void onClick(View view){
@@ -42,11 +42,11 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         new AsyncTask<Void, Void, Intent>() {
             @Override
             protected Intent doInBackground(Void... params) {
-                String authtoken = sServerAuthenticate.signIn(userName, userPass, mAuthTokenType);
+                String authToken = sServerAuthenticate.signIn(userName, userPass, mAuthTokenType);
                 final Intent res = new Intent();
                 res.putExtra(AccountManager.KEY_ACCOUNT_NAME, userName);
                 res.putExtra(AccountManager.KEY_ACCOUNT_TYPE, "Any type");
-                res.putExtra(AccountManager.KEY_AUTHTOKEN, authtoken);
+                res.putExtra(AccountManager.KEY_AUTHTOKEN, authToken);
                 res.putExtra(PARAM_USER_PASS, userPass);
                 return res;
             }
@@ -62,12 +62,12 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         String accountPassword = intent.getStringExtra(PARAM_USER_PASS);
         final Account account = new Account(accountName, intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE));
         if (getIntent().getBooleanExtra(ARG_IS_ADDING_NEW_ACCOUNT, false)) {
-            String authtoken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
-            String authtokenType = mAuthTokenType;
+            String authToken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
+            String authTokenType = mAuthTokenType;
             // Creating the account on the device and setting the auth token we got
             // (Not setting the auth token will cause another call to the server to authenticate the user)
             mAccountManager.addAccountExplicitly(account, accountPassword, null);
-            mAccountManager.setAuthToken(account, authtokenType, authtoken);
+            mAccountManager.setAuthToken(account, authTokenType, authToken);
         } else {
             mAccountManager.setPassword(account, accountPassword);
         }

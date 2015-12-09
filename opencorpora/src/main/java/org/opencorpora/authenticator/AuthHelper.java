@@ -34,7 +34,7 @@ public class AuthHelper {
      */
     public String signIn(String username, String password, String accountType){
         // Stub. Need synchronized query
-        return "sdklfjslkdfj";
+        return "thisIsStubToken";
     }
 
     public void authorize(String login, String password, Activity context) {
