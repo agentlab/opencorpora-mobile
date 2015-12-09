@@ -13,5 +13,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/MainButtonText"
-        android:onClick="OnClick"/>
+        android:onClick="onClick"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/AddAccountButtonText"
+        android:onClick=""/>
 </LinearLayout>

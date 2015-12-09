@@ -7,6 +7,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import org.opencorpora.authenticator.AuthHelper;
+import org.opencorpora.authenticator.IAuthListener;
+
 
 public class OpenCorporaActivity extends Activity implements IAuthListener {
     @Override
@@ -38,7 +41,11 @@ public class OpenCorporaActivity extends Activity implements IAuthListener {
         AuthHelper.getInstance().unSubscribe(this);
     }
 
-    public void OnClick(View view){
+    public void onClick(View view){
         AuthHelper.getInstance().authorize("login", "password", this);
+        AuthHelper.getInstance().subscribe(this);
+    }
+
+    public void addAccount(View view){
     }
 }
