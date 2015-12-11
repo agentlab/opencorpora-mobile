@@ -15,7 +15,7 @@ import org.opencorpora.R;
  * A login screen that offers login via email/password.
  */
 public class AuthenticatorActivity extends AccountAuthenticatorActivity {
-    public final static String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
+    public final static String ARG_ACCOUNT_TYPE = "org.opencorpora";
     public final static String ARG_AUTH_TYPE = "AUTH_TYPE";
     public final static String ARG_ACCOUNT_NAME = "ACCOUNT_NAME";
     public final static String ARG_IS_ADDING_NEW_ACCOUNT = "IS_ADDING_ACCOUNT";
@@ -45,7 +45,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 String authToken = sServerAuthenticate.signIn(userName, userPass, mAuthTokenType);
                 final Intent res = new Intent();
                 res.putExtra(AccountManager.KEY_ACCOUNT_NAME, userName);
-                res.putExtra(AccountManager.KEY_ACCOUNT_TYPE, "Any type");
+                res.putExtra(AccountManager.KEY_ACCOUNT_TYPE, ARG_ACCOUNT_TYPE);
                 res.putExtra(AccountManager.KEY_AUTHTOKEN, authToken);
                 res.putExtra(PARAM_USER_PASS, userPass);
                 return res;
