@@ -35,11 +35,6 @@
         </activity>
 
         <service
-            android:name=".authenticator.AuthService"
-            android:exported="false">
-        </service>
-
-        <service
             android:name=".authenticator.AuthenticatorService"
             android:enabled="true"
             android:exported="true"
