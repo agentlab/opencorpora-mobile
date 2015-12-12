@@ -9,24 +9,29 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 
 public class Authenticator extends AbstractAccountAuthenticator {
-    private Context mContext;
+    private static final String LOG_TAG = "Authenticator";
+    private final Context mContext;
 
-    private static AuthHelper sAuthService = AuthHelper.getInstance();
+    private final AuthHelper mAuthService;
 
     public Authenticator(Context context) {
         super(context);
         mContext = context;
+        mAuthService = new AuthHelper();
     }
 
     @Override
     public Bundle editProperties(AccountAuthenticatorResponse response, String accountType) {
+        Log.d(LOG_TAG, "editProperties call");
         return null;
     }
 
     @Override
     public Bundle addAccount(AccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures, Bundle options) throws NetworkErrorException {
+        Log.d(LOG_TAG, "addAccount call");
         final Intent intent = new Intent(mContext, AuthenticatorActivity.class);
         intent.putExtra(AuthenticatorActivity.ARG_ACCOUNT_TYPE, accountType);
         intent.putExtra(AuthenticatorActivity.ARG_AUTH_TYPE, authTokenType);
@@ -39,11 +44,13 @@ public class Authenticator extends AbstractAccountAuthenticator {
 
     @Override
     public Bundle confirmCredentials(AccountAuthenticatorResponse response, Account account, Bundle options) throws NetworkErrorException {
+        Log.d(LOG_TAG, "confirmCredentials call");
         return null;
     }
 
     @Override
     public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account, String authTokenType, Bundle options) throws NetworkErrorException {
+        Log.d(LOG_TAG, "getAuthToken call");
         final AccountManager manager = AccountManager.get(mContext);
 
         String authToken = manager.peekAuthToken(account, authTokenType);
@@ -52,7 +59,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
             final String password = manager.getPassword(account);
 
             if(password != null){
-                authToken = sAuthService.signIn(account.name, password, authTokenType);
+                authToken = mAuthService.signIn(account.name, password);
             }
         }
 
@@ -76,16 +83,19 @@ public class Authenticator extends AbstractAccountAuthenticator {
 
     @Override
     public String getAuthTokenLabel(String authTokenType) {
+        Log.d(LOG_TAG, "getAuthTokenLabel call");
         return null;
     }
 
     @Override
     public Bundle updateCredentials(AccountAuthenticatorResponse response, Account account, String authTokenType, Bundle options) throws NetworkErrorException {
+        Log.d(LOG_TAG, "updateCredentials call");
         return null;
     }
 
     @Override
     public Bundle hasFeatures(AccountAuthenticatorResponse response, Account account, String[] features) throws NetworkErrorException {
+        Log.d(LOG_TAG, "hasFeatures call");
         return null;
     }
 }

@@ -1,79 +1,53 @@
 package org.opencorpora.authenticator;
 
-import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.util.Log;
 
-import java.util.Vector;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.SyncHttpClient;
 
-public class AuthHelper {
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.opencorpora.BuildConfig;
+
+import cz.msebera.android.httpclient.Header;
+
+class AuthHelper {
     final private String LOG_TAG = "[AuthHelper]";
 
-    final private Vector<IAuthListener> mListeners;
-    private static class HelperHolder{
-        public static final AuthHelper INSTANCE = new AuthHelper();
+    private String mResult;
+
+    public AuthHelper(){
     }
 
-    private AuthHelper(){
-        mListeners = new Vector<>();
-    }
+    public synchronized String signIn(String username, String password) {
+        SyncHttpClient client = new SyncHttpClient();
+        RequestParams params = new RequestParams();
+        params.add("login", username);
+        params.add("password", password);
+        mResult = null;
+        client.post(BuildConfig.server_address + "api/login.php",
+                params,
+                new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        super.onSuccess(statusCode, headers, response);
+                        try {
+                            Log.i(LOG_TAG, "Request successful");
+                            mResult = response.getString("token");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
 
-    public static AuthHelper getInstance(){
-        return HelperHolder.INSTANCE;
-    }
-
-
-    /**
-     * @param username Имя пользователя
-     * @param password Пароль
-     * @param accountType Тип аккаунта (не используется)
-     * @return Строка с токеном, либо null, если авторизоваться не удалось
-     */
-    public String signIn(String username, String password, String accountType){
-        // Stub. Need synchronized query
-        return "thisIsStubToken";
-    }
-
-    public void authorize(String login, String password, Activity context) {
-
-        BroadcastReceiver receiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Log.i(LOG_TAG, "Broadcast message received");
-                Log.i(LOG_TAG, "Success = " + intent.getBooleanExtra("isSuccess", false));
-                if(intent.getBooleanExtra("isSuccess", false)){
-                    String token = intent.getStringExtra("token");
-                    Log.i(LOG_TAG, token);
-                    for(IAuthListener listener : mListeners){
-                        listener.onSuccess();
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        super.onFailure(statusCode, headers, throwable, errorResponse);
+                        Log.i(LOG_TAG, "Request failed");
                     }
                 }
-                else{
-                    for(IAuthListener listener : mListeners){
-                        listener.onFail();
-                    }
-                }
+        );
 
-                context.unregisterReceiver(this);
-            }
-        };
-
-        IntentFilter  filter = new IntentFilter("My login action");
-        context.registerReceiver(receiver, filter);
-
-        context.startService(new Intent(context, AuthService.class)
-                .putExtra("login", login)
-                .putExtra("password", password));
-    }
-
-    public void subscribe(IAuthListener listener) {
-        mListeners.add(listener);
-    }
-
-    public void unSubscribe(IAuthListener listener){
-        mListeners.remove(listener);
+        return mResult;
     }
 }
