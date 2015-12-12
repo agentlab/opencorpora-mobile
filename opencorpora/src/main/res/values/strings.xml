@@ -2,8 +2,6 @@
 <resources>
     <string name="app_name">OpenCorpora</string>
     <string name="MainButtonText">Try to get token</string>
-    <string name="RequestFailed">Request was failed. Token not available</string>
-    <string name="TokenReceivedPrefix">"token received: "</string>
     <string name="title_activity_authenticator">Sign in</string>
 
     <!-- Strings related to login -->

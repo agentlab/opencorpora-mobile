@@ -11,12 +11,10 @@ import org.opencorpora.authenticator.Authenticator;
 
 
 public class OpenCorporaActivity extends Activity {
-    private Authenticator mAuthenticator;
     private TextView mtTextView;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAuthenticator = new Authenticator(this);
         setContentView(R.layout.opencorpora_layout);
         mtTextView = (TextView) findViewById(R.id.text_view);
     }
