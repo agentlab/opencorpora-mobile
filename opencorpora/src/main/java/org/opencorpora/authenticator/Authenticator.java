@@ -17,7 +17,6 @@ import org.opencorpora.InternalContract;
 public class Authenticator extends AbstractAccountAuthenticator {
     private static final String LOG_TAG = "Authenticator";
     private final Context mContext;
-
     private final AuthHelper mAuthService;
 
     public Authenticator(Context context) {
@@ -40,12 +39,12 @@ public class Authenticator extends AbstractAccountAuthenticator {
                              Bundle options) throws NetworkErrorException {
         Log.d(LOG_TAG, "addAccount call");
         final Intent intent = new Intent(mContext, AuthenticatorActivity.class);
-        intent.putExtra(InternalContract.ACCOUNT_TYPE, accountType);
-        intent.putExtra(InternalContract.AUTH_TYPE, authTokenType);
-        intent.putExtra(AuthenticatorActivity.ARG_IS_ADDING_NEW_ACCOUNT, true);
-        intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
+        intent.putExtra(InternalContract.KEY_ACCOUNT_TYPE, accountType);
+        intent.putExtra(InternalContract.KEY_AUTH_TYPE, authTokenType);
+        intent.putExtra(InternalContract.KEY_IS_ADDING_NEW_ACCOUNT, true);
+        intent.putExtra(InternalContract.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
         final Bundle bundle = new Bundle();
-        bundle.putParcelable(AccountManager.KEY_INTENT, intent);
+        bundle.putParcelable(InternalContract.KEY_INTENT, intent);
         return bundle;
     }
 
@@ -77,18 +76,18 @@ public class Authenticator extends AbstractAccountAuthenticator {
 
         if(!TextUtils.isEmpty(authToken)){
             final Bundle result = new Bundle();
-            result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
-            result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
-            result.putString(AccountManager.KEY_AUTHTOKEN, authToken);
+            result.putString(InternalContract.KEY_ACCOUNT_NAME, account.name);
+            result.putString(InternalContract.KEY_ACCOUNT_TYPE, account.type);
+            result.putString(InternalContract.KEY_AUTH_TOKEN, authToken);
             return result;
         }
 
         final Intent intent = new Intent(mContext, AuthenticatorActivity.class);
-        intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
-        intent.putExtra(AuthenticatorActivity.ARG_ACCOUNT_NAME, account.type);
-        intent.putExtra(InternalContract.AUTH_TYPE, authTokenType);
+        intent.putExtra(InternalContract.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
+        intent.putExtra(InternalContract.KEY_ACCOUNT_NAME, account.type);
+        intent.putExtra(InternalContract.KEY_AUTH_TYPE, authTokenType);
         final Bundle bundle = new Bundle();
-        bundle.putParcelable(AccountManager.KEY_INTENT, intent);
+        bundle.putParcelable(InternalContract.KEY_INTENT, intent);
 
         return bundle;
     }
