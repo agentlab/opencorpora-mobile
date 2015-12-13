@@ -9,12 +9,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import org.opencorpora.InternalContract;
 import org.opencorpora.R;
 
 
 public class AuthenticatorActivity extends AccountAuthenticatorActivity {
-    public final static String ARG_ACCOUNT_TYPE = "org.opencorpora";
-    public final static String ARG_AUTH_TYPE = "login_pass_auth";
     public final static String ARG_ACCOUNT_NAME = "opencorpora_account";
     public final static String ARG_IS_ADDING_NEW_ACCOUNT = "is_adding_account";
 
@@ -45,7 +44,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 String authToken = mServerAuthenticate.signIn(userName, userPass);
                 final Intent res = new Intent();
                 res.putExtra(AccountManager.KEY_ACCOUNT_NAME, userName);
-                res.putExtra(AccountManager.KEY_ACCOUNT_TYPE, ARG_ACCOUNT_TYPE);
+                res.putExtra(AccountManager.KEY_ACCOUNT_TYPE, InternalContract.ACCOUNT_TYPE);
                 res.putExtra(AccountManager.KEY_AUTHTOKEN, authToken);
                 res.putExtra(PARAM_USER_PASS, userPass);
                 return res;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">OpenCorpora</string>
-    <string name="MainButtonText">Try to get token</string>
+    <string name="manual_sync_button_text">Manual start sync</string>
     <string name="title_activity_authenticator">Sign in</string>
 
     <!-- Strings related to login -->
@@ -10,5 +10,5 @@
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="label">OpenCorpora</string>
-    <string name="AddAccountButtonText">Try add account</string>
+    <string name="count_button_text">Count</string>
 </resources>
