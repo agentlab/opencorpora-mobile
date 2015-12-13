@@ -22,17 +22,22 @@ public class TaskSyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     @Override
-    public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
-        Log.d(LOG_TAG, "Start sync");
+    public void onPerformSync(Account account,
+                              Bundle extras,
+                              String authority,
+                              ContentProviderClient provider,
+                              SyncResult syncResult) {
+        Log.i(LOG_TAG, "Start sync");
 
         try {
-            String token = AccountManager.get(mContext).blockingGetAuthToken(account, "login_pass_auth", false);
-            Log.d(LOG_TAG, "Sync started for " + account.name + ". With token " + token);
+            String token = AccountManager.get(mContext)
+                    .blockingGetAuthToken(account, "login_pass_auth", false);
+            Log.i(LOG_TAG, "Sync started for " + account.name + ". With token " + token);
         } catch (OperationCanceledException | IOException | AuthenticatorException e) {
             e.printStackTrace();
         }
         // ToDo: sync all
 
-        Log.d(LOG_TAG, "Sync is completed");
+        Log.i(LOG_TAG, "Sync is completed");
     }
 }
