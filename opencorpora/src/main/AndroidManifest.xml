@@ -56,7 +56,7 @@
 
         <provider
             android:name=".TaskProvider"
-            android:authorities="task"
+            android:authorities="org.opencorpora.task.provider"
             android:enabled="true"
             android:exported="false" >
         </provider>
