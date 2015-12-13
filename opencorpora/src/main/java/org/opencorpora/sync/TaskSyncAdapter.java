@@ -1,4 +1,4 @@
-package org.opencorpora;
+package org.opencorpora.sync;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;

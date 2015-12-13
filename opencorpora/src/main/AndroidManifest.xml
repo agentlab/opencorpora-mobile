@@ -56,14 +56,14 @@
         </service>
 
         <provider
-            android:name=".TaskProvider"
+            android:name=".sync.TaskProvider"
             android:authorities="org.opencorpora.task.provider"
             android:enabled="true"
             android:exported="false" >
         </provider>
 
         <service
-            android:name=".TaskService"
+            android:name=".sync.TaskService"
             android:exported="true"
             android:permission="android.permission.ACCOUNT_MANAGER">
             <intent-filter>

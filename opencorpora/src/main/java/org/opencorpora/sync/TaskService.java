@@ -1,4 +1,4 @@
-package org.opencorpora;
+package org.opencorpora.sync;
 
 import android.app.Service;
 import android.content.Intent;

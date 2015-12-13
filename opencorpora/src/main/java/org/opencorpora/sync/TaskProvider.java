@@ -1,4 +1,4 @@
-package org.opencorpora;
+package org.opencorpora.sync;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
