@@ -10,15 +10,15 @@ public class TaskType {
         mName = name;
     }
 
-    public int getmId() {
+    public int getId() {
         return mId;
     }
 
-    public String getmName() {
+    public String getName() {
         return mName;
     }
 
-    public int getmComplexity() {
+    public int getComplexity() {
         return mComplexity;
     }
 }

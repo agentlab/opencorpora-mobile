@@ -28,7 +28,6 @@ public class TaskSyncAdapter extends AbstractThreadedSyncAdapter {
                               ContentProviderClient provider,
                               SyncResult syncResult) {
         Log.i(LOG_TAG, "Start sync");
-
         try {
             String token = AccountManager.get(mContext)
                     .blockingGetAuthToken(account, "login_pass_auth", false);
