@@ -21,7 +21,7 @@ public class TaskDatabaseHelper extends SQLiteOpenHelper {
 
     /* task columns */
     public static final String TASK_ID_COLUMN = "id";
-    public static final String TASK_TYPE_COLUMN = "type";
+    public static final String TASK_TYPE_COLUMN = "type_id";
     public static final String TASK_TARGET_COLUMN = "target";
     public static final String TASK_LEFT_CONTEXT_COLUMN = "left_context";
     public static final String TASK_RIGHT_CONTEXT_COLUMN = "right_context";
@@ -35,7 +35,7 @@ public class TaskDatabaseHelper extends SQLiteOpenHelper {
 
     /* completed_task columns */
     public static final String COMPLETED_TASK_ID_COLUMN = "id";
-    public static final String COMPLETED_TASK_TYPE_COLUMN = "type";
+    public static final String COMPLETED_TASK_TYPE_COLUMN = "type_id";
     public static final String COMPLETED_TASK_ANSWER_COLUMN = "answer";
     public static final String COMPLETED_TASK_SECONDS_COLUMN = "seconds_before_answer";
     public static final String COMPLETED_TASK_IS_LEFT_SHOWED_COLUMN = "is_left_context_showed";
@@ -61,7 +61,7 @@ public class TaskDatabaseHelper extends SQLiteOpenHelper {
             + TASK_TYPE_TABLE_NAME + "(" + TASK_TYPE_ID_COLUMN + "));";
 
     private static final String CHOICE_TABLE_CREATE = "CREATE TABLE " + CHOICE_TABLE_NAME + "("
-            + CHOICE_ID_COLUMN + " INTEGER PRIMARY KEY " + COMMA
+            + CHOICE_ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT " + COMMA
             + CHOICE_TASK_ID_COLUMN + " INTEGER " + COMMA
             + CHOICE_ANSWER_COLUMN + " TEXT " + COMMA
             + CHOICE_ANSWER_NUM_COLUMN + " INTEGER " + COMMA

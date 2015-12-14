@@ -3,6 +3,7 @@ package org.opencorpora.data;
 import java.util.HashMap;
 
 public class Task extends BaseTask {
+    private String mTarget;
     private String mLeftContext;
     private String mRightContext;
     private boolean mHasInstruction;
@@ -14,14 +15,20 @@ public class Task extends BaseTask {
 
     public Task(int id,
                 TaskType type,
+                String target,
                 String leftContext,
                 String rightContext,
                 boolean hasInstruction){
         super(id, type);
+        mTarget = target;
         mLeftContext = leftContext;
         mRightContext = rightContext;
         mHasInstruction = hasInstruction;
         mChoices = new HashMap<>();
+    }
+
+    public String getTarget() {
+        return mTarget;
     }
 
     public String getLeftContext() {
@@ -40,6 +47,10 @@ public class Task extends BaseTask {
         return mChoices.get(choiceNum);
     }
 
+    public HashMap<Integer, String> getChoices(){
+        return mChoices;
+    }
+
     public void setLeftContext(String value){
         mLeftContext = value;
     }
@@ -54,5 +65,9 @@ public class Task extends BaseTask {
 
     public void setChoiceByNumber(int number, String value){
         mChoices.put(number, value);
+    }
+
+    public void setTarget(String mTarget) {
+        mTarget = mTarget;
     }
 }
