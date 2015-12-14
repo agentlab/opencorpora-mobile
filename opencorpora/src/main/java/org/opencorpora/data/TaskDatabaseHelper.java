@@ -3,7 +3,6 @@ package org.opencorpora.data;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.media.tv.TvTrackInfo;
 
 public class TaskDatabaseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
@@ -23,7 +22,7 @@ public class TaskDatabaseHelper extends SQLiteOpenHelper {
     /* task columns */
     public static final String TASK_ID_COLUMN = "id";
     public static final String TASK_TYPE_COLUMN = "type";
-    public static final String TASK_TARGET_COLUMN = "type";
+    public static final String TASK_TARGET_COLUMN = "target";
     public static final String TASK_LEFT_CONTEXT_COLUMN = "left_context";
     public static final String TASK_RIGHT_CONTEXT_COLUMN = "right_context";
     public static final String TASK_HAS_INSTRUCTION_COLUMN = "has_instruction";
@@ -36,6 +35,7 @@ public class TaskDatabaseHelper extends SQLiteOpenHelper {
 
     /* completed_task columns */
     public static final String COMPLETED_TASK_ID_COLUMN = "id";
+    public static final String COMPLETED_TASK_TYPE_COLUMN = "type";
     public static final String COMPLETED_TASK_ANSWER_COLUMN = "answer";
     public static final String COMPLETED_TASK_SECONDS_COLUMN = "seconds_before_answer";
     public static final String COMPLETED_TASK_IS_LEFT_SHOWED_COLUMN = "is_left_context_showed";
@@ -71,25 +71,17 @@ public class TaskDatabaseHelper extends SQLiteOpenHelper {
     private static final String COMPLETED_TASK_TABLE_CREATE =
             "CREATE TABLE " + COMPLETED_TASK_TABLE_NAME + "("
             + COMPLETED_TASK_ID_COLUMN + " INTEGER PRIMARY KEY " + COMMA
+            + COMPLETED_TASK_TYPE_COLUMN + " INTEGER " + COMMA
             + COMPLETED_TASK_ANSWER_COLUMN + " TEXT " + COMMA
             + COMPLETED_TASK_SECONDS_COLUMN + " INTEGER " + COMMA
             + COMPLETED_TASK_IS_LEFT_SHOWED_COLUMN + " BOOLEAN " + COMMA
             + COMPLETED_TASK_IS_RIGHT_SHOWED_COLUMN + " BOOLEAN " + COMMA
             + COMPLETED_TASK_IS_COMMENTED_COLUMN + " BOOLEAN " + COMMA
             + COMPLETED_TASK_COMMENT_COLUMN + "TEXT" + COMMA
-            + "FOREIGN KEY(" + TASK_TYPE_COLUMN + ") REFERENCES "
+            + "FOREIGN KEY(" + COMPLETED_TASK_TYPE_COLUMN + ") REFERENCES "
             + TASK_TYPE_TABLE_NAME + "(" + TASK_TYPE_ID_COLUMN + "));";
 
-    private static TaskDatabaseHelper instance;
-
-    public static synchronized TaskDatabaseHelper getHelper(Context context){
-        if(instance == null){
-            instance = new TaskDatabaseHelper(context);
-        }
-        return instance;
-    }
-
-    private TaskDatabaseHelper(Context context) {
+    public TaskDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -99,7 +91,6 @@ public class TaskDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(TASK_TABLE_CREATE);
         db.execSQL(CHOICE_TABLE_CREATE);
         db.execSQL(COMPLETED_TASK_TABLE_CREATE);
-
     }
 
     @Override
