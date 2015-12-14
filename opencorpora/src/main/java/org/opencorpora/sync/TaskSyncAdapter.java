@@ -11,6 +11,8 @@ import android.content.SyncResult;
 import android.os.Bundle;
 import android.util.Log;
 
+import org.opencorpora.InternalContract;
+
 import java.io.IOException;
 
 public class TaskSyncAdapter extends AbstractThreadedSyncAdapter {
@@ -30,7 +32,7 @@ public class TaskSyncAdapter extends AbstractThreadedSyncAdapter {
         Log.i(LOG_TAG, "Start sync");
         try {
             String token = AccountManager.get(mContext)
-                    .blockingGetAuthToken(account, "login_pass_auth", false);
+                    .blockingGetAuthToken(account, InternalContract.AUTH_TOKEN_TYPE, false);
             Log.i(LOG_TAG, "Sync started for " + account.name + ". With token " + token);
         } catch (OperationCanceledException | IOException | AuthenticatorException e) {
             e.printStackTrace();
