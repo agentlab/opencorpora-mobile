@@ -8,12 +8,12 @@ public class Task extends BaseTask {
     private boolean mHasInstruction;
     private HashMap<Integer, String> mChoices;
 
-    public Task(int id, int type) {
+    public Task(int id, TaskType type) {
         super(id, type);
     }
 
     public Task(int id,
-                int type,
+                TaskType type,
                 String leftContext,
                 String rightContext,
                 boolean hasInstruction){

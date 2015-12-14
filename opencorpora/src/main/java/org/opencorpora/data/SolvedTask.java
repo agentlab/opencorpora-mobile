@@ -8,7 +8,7 @@ public class SolvedTask extends BaseTask {
     private boolean mIsCommented;
     private String mComment;
 
-    SolvedTask(int id, int type) {
+    SolvedTask(int id, TaskType type) {
         super(id, type);
     }
 

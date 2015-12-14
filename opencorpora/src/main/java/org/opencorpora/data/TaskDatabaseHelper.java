@@ -3,15 +3,22 @@ package org.opencorpora.data;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.media.tv.TvTrackInfo;
 
 public class TaskDatabaseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "opencorpora_db";
 
     /* tables */
+    public static final String TASK_TYPE_TABLE_NAME = "task_type";
     public static final String TASK_TABLE_NAME = "task";
     public static final String CHOICE_TABLE_NAME = "choice";
     public static final String COMPLETED_TASK_TABLE_NAME = "completed_task";
+
+    /* task_type columns */
+    public static final String TASK_TYPE_ID_COLUMN = "id";
+    public static final String TASK_TYPE_NAME_COLUMN = "name";
+    public static final String TASK_TYPE_COMPLEXITY_COLUMN = "complexity";
 
     /* task columns */
     public static final String TASK_ID_COLUMN = "id";
@@ -38,15 +45,22 @@ public class TaskDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String COMMA = ", ";
 
-    private static final String TASK_TABLE_CREATE = "CREATE TABLE" + TASK_TABLE_NAME + "("
+    private static final String TASK_TYPE_TABLE_CREATE = "CREATE TABLE " + TASK_TYPE_TABLE_NAME
+            + "(" + TASK_TYPE_ID_COLUMN + " INTEGER PRIMARY KEY " + COMMA
+            + TASK_TYPE_NAME_COLUMN + " TEXT " + COMMA
+            + TASK_TYPE_COMPLEXITY_COLUMN + "INTEGER" + ");";
+
+    private static final String TASK_TABLE_CREATE = "CREATE TABLE " + TASK_TABLE_NAME + "("
             + TASK_ID_COLUMN + " INTEGER PRIMARY KEY " + COMMA
             + TASK_TYPE_COLUMN + " INTEGER " + COMMA
             + TASK_TARGET_COLUMN + " TEXT " + COMMA
             + TASK_LEFT_CONTEXT_COLUMN + " TEXT " + COMMA
             + TASK_RIGHT_CONTEXT_COLUMN + " TEXT " + COMMA
-            + TASK_HAS_INSTRUCTION_COLUMN + " BOOLEAN " + ");";
+            + TASK_HAS_INSTRUCTION_COLUMN + " BOOLEAN " + COMMA
+            + "FOREIGN KEY(" + TASK_TYPE_COLUMN + ") REFERENCES "
+            + TASK_TYPE_TABLE_NAME + "(" + TASK_TYPE_ID_COLUMN + "));";
 
-    private static final String CHOICE_TABLE_CREATE = "CREATE TABLE" + CHOICE_TABLE_NAME + "("
+    private static final String CHOICE_TABLE_CREATE = "CREATE TABLE " + CHOICE_TABLE_NAME + "("
             + CHOICE_ID_COLUMN + " INTEGER PRIMARY KEY " + COMMA
             + CHOICE_TASK_ID_COLUMN + " INTEGER " + COMMA
             + CHOICE_ANSWER_COLUMN + " TEXT " + COMMA
@@ -55,14 +69,16 @@ public class TaskDatabaseHelper extends SQLiteOpenHelper {
             + TASK_TABLE_NAME + "(" + TASK_ID_COLUMN + "));";
 
     private static final String COMPLETED_TASK_TABLE_CREATE =
-            "CREATE TABLE" + COMPLETED_TASK_TABLE_NAME + "("
+            "CREATE TABLE " + COMPLETED_TASK_TABLE_NAME + "("
             + COMPLETED_TASK_ID_COLUMN + " INTEGER PRIMARY KEY " + COMMA
             + COMPLETED_TASK_ANSWER_COLUMN + " TEXT " + COMMA
             + COMPLETED_TASK_SECONDS_COLUMN + " INTEGER " + COMMA
             + COMPLETED_TASK_IS_LEFT_SHOWED_COLUMN + " BOOLEAN " + COMMA
             + COMPLETED_TASK_IS_RIGHT_SHOWED_COLUMN + " BOOLEAN " + COMMA
             + COMPLETED_TASK_IS_COMMENTED_COLUMN + " BOOLEAN " + COMMA
-            + COMPLETED_TASK_COMMENT_COLUMN + "TEXT" + ");";
+            + COMPLETED_TASK_COMMENT_COLUMN + "TEXT" + COMMA
+            + "FOREIGN KEY(" + TASK_TYPE_COLUMN + ") REFERENCES "
+            + TASK_TYPE_TABLE_NAME + "(" + TASK_TYPE_ID_COLUMN + "));";
 
     private static TaskDatabaseHelper instance;
 
@@ -79,6 +95,7 @@ public class TaskDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        db.execSQL(TASK_TYPE_TABLE_CREATE);
         db.execSQL(TASK_TABLE_CREATE);
         db.execSQL(CHOICE_TABLE_CREATE);
         db.execSQL(COMPLETED_TASK_TABLE_CREATE);

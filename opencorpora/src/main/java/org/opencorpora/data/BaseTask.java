@@ -2,8 +2,8 @@ package org.opencorpora.data;
 
 public class BaseTask {
     private int mId;
-    private int mType;
-    BaseTask(int id, int type){
+    private TaskType mType;
+    BaseTask(int id, TaskType type){
         mId = id;
         mType = type;
     }
@@ -12,7 +12,7 @@ public class BaseTask {
         return mId;
     }
 
-    public int getType(){
+    public TaskType getType(){
         return mType;
     }
 }
