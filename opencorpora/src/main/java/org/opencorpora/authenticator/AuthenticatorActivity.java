@@ -37,7 +37,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     public void submit() {
         final String userName = ((TextView) findViewById(R.id.accountName)).getText().toString();
-        final String userPass = ((TextView) findViewById(R.id.accountPassword)).getText().toString();
+        final String userPass =
+                ((TextView) findViewById(R.id.accountPassword)).getText().toString();
         new AsyncTask<Void, Void, Intent>() {
             @Override
             protected Intent doInBackground(Void... params) {
@@ -59,12 +60,11 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     private void finishLogin(Intent intent) {
         String accountName = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
         String accountPassword = intent.getStringExtra(PARAM_USER_PASS);
-        final Account account = new Account(accountName, intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE));
+        final Account account =
+                new Account(accountName, intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE));
         if (getIntent().getBooleanExtra(ARG_IS_ADDING_NEW_ACCOUNT, false)) {
             String authToken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
             String authTokenType = mAuthTokenType;
-            // Creating the account on the device and setting the auth token we got
-            // (Not setting the auth token will cause another call to the server to authenticate the user)
             mAccountManager.addAccountExplicitly(account, accountPassword, null);
             mAccountManager.setAuthToken(account, authTokenType, authToken);
         } else {
@@ -75,4 +75,3 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         finish();
     }
 }
-

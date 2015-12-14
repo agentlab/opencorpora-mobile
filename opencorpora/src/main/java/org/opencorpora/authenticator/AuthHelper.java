@@ -12,13 +12,11 @@ import org.opencorpora.BuildConfig;
 
 import cz.msebera.android.httpclient.Header;
 
+
 class AuthHelper {
-    final private String LOG_TAG = "[AuthHelper]";
+    final private String LOG_TAG = "AuthHelper";
 
     private String mResult;
-
-    public AuthHelper(){
-    }
 
     public synchronized String signIn(String username, String password) {
         SyncHttpClient client = new SyncHttpClient();
@@ -41,7 +39,10 @@ class AuthHelper {
                     }
 
                     @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    public void onFailure(int statusCode,
+                                          Header[] headers,
+                                          Throwable throwable,
+                                          JSONObject errorResponse) {
                         super.onFailure(statusCode, headers, throwable, errorResponse);
                         Log.i(LOG_TAG, "Request failed");
                     }
