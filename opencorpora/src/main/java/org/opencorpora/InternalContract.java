@@ -11,7 +11,8 @@ public class InternalContract {
 
     /* Значения, используемые в качестве ключей при
      * передачи параметров через key-value объекты(Bundle, intent) */
-    public static final String KEY_ACCOUNT_AUTHENTICATOR_RESPONSE = AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE;
+    public static final String KEY_ACCOUNT_AUTHENTICATOR_RESPONSE
+                                = AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE;
     public static final String KEY_ACCOUNT_NAME = AccountManager.KEY_ACCOUNT_NAME;
     public static final String KEY_ACCOUNT_TYPE =  AccountManager.KEY_ACCOUNT_TYPE;
     public static final String KEY_AUTH_TOKEN = AccountManager.KEY_AUTHTOKEN;

@@ -25,12 +25,15 @@ public class OpenCorporaActivity extends Activity {
     }
 
     public void onClick(View view){
-        Account[] accounts = AccountManager.get(this).getAccountsByType(InternalContract.ACCOUNT_TYPE);
+        Account[] accounts
+                = AccountManager.get(this).getAccountsByType(InternalContract.ACCOUNT_TYPE);
         if(accounts.length > 0){
             Bundle bundle = new Bundle();
             bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
             bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-            ContentResolver.requestSync(accounts[0], InternalContract.TASK_PROVIDER_AUTHORITY, bundle);
+            ContentResolver.requestSync(accounts[0],
+                    InternalContract.TASK_PROVIDER_AUTHORITY,
+                    bundle);
             mTextView.setText("Sync is active? = " + ContentResolver.getSyncAdapterTypes().length);
         }
         else{
@@ -39,7 +42,8 @@ public class OpenCorporaActivity extends Activity {
     }
 
     public void tryAuth(View view){
-        Account[] accounts = AccountManager.get(this).getAccountsByType(InternalContract.ACCOUNT_TYPE);
+        Account[] accounts =
+                AccountManager.get(this).getAccountsByType(InternalContract.ACCOUNT_TYPE);
         mTextView.setText("Found: " + accounts.length + " opencorpora accounts.");
     }
 }

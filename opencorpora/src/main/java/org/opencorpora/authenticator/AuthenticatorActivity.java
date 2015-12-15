@@ -54,7 +54,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         String accountName = intent.getStringExtra(InternalContract.KEY_ACCOUNT_NAME);
         String accountPassword = intent.getStringExtra(InternalContract.KEY_USER_PASSWORD);
         final Account account = 
-                    new Account(accountName, intent.getStringExtra(InternalContract.KEY_ACCOUNT_TYPE));
+                new Account(accountName, intent.getStringExtra(InternalContract.KEY_ACCOUNT_TYPE));
         if (getIntent().getBooleanExtra(InternalContract.KEY_IS_ADDING_NEW_ACCOUNT, false)) {
             String authToken = intent.getStringExtra(InternalContract.KEY_AUTH_TOKEN);
             String authTokenType = InternalContract.AUTH_TOKEN_TYPE;
