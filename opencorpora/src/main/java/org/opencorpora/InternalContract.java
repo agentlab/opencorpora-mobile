@@ -3,14 +3,12 @@ package org.opencorpora;
 import android.accounts.AccountManager;
 
 public class InternalContract {
-    /* Выбранные имена некоторых сущностей приложения */
     public static final String TASK_PROVIDER_AUTHORITY = "org.opencorpora.task.provider";
     public static final String ACCOUNT_TYPE = "org.opencorpora";
     public static final String AUTH_TOKEN_TYPE = "opencorpora_token";
     public static final String AUTH_TYPE = "login_pass_auth";
 
-    /* Значения, используемые в качестве ключей при
-     * передачи параметров через key-value объекты(Bundle, intent) */
+    /* Keys for key-values objects (Bundle, Intent) */
     public static final String KEY_ACCOUNT_AUTHENTICATOR_RESPONSE
                                 = AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE;
     public static final String KEY_ACCOUNT_NAME = AccountManager.KEY_ACCOUNT_NAME;
