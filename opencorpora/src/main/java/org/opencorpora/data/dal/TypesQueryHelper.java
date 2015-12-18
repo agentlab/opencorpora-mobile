@@ -1,6 +1,5 @@
 package org.opencorpora.data.dal;
 
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -19,16 +18,9 @@ import static org.opencorpora.data.DatabaseHelper.TASK_TYPE_ID_COLUMN;
 import static org.opencorpora.data.DatabaseHelper.TASK_TYPE_NAME_COLUMN;
 import static org.opencorpora.data.DatabaseHelper.TASK_TYPE_TABLE_NAME;
 
-
 public class TypesQueryHelper {
-    private final String LOG_TAG = "TypesQueryHelper";
+    private static final String LOG_TAG = "TypesQueryHelper";
     private static DatabaseHelper mDbHelper;
-
-
-    /**
-     * @see <a href="http://stackoverflow.com/questions/3634984/insert-if-not-exists-else-update">
-     *     about update if exists</a>
-     */
 
     public TypesQueryHelper(Context context){
         mDbHelper = new DatabaseHelper(context);
@@ -62,7 +54,6 @@ public class TypesQueryHelper {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         long startTime = System.currentTimeMillis();
-
         Cursor cursor = db.query(TASK_TYPE_TABLE_NAME,
                 new String[]{
                         TASK_TYPE_ID_COLUMN,

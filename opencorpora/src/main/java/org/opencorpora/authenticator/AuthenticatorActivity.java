@@ -12,7 +12,6 @@ import android.widget.TextView;
 import org.opencorpora.InternalContract;
 import org.opencorpora.R;
 
-
 public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     private AuthHelper mServerAuthenticate;
     private AccountManager mAccountManager;

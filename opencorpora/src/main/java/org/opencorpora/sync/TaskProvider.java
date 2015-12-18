@@ -42,7 +42,10 @@ public class TaskProvider extends ContentProvider {
     }
 
     @Override
-    public int update(@NotNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+    public int update(@NotNull Uri uri,
+                      ContentValues values,
+                      String selection,
+                      String[] selectionArgs) {
         return 0;
     }
 

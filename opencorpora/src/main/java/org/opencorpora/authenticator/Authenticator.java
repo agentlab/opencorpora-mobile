@@ -13,9 +13,9 @@ import android.util.Log;
 
 import org.opencorpora.InternalContract;
 
-
 public class Authenticator extends AbstractAccountAuthenticator {
     private static final String LOG_TAG = "Authenticator";
+
     private final Context mContext;
     private final AuthHelper mAuthService;
 

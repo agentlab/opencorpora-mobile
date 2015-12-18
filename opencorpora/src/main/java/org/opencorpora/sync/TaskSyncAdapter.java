@@ -22,9 +22,11 @@ import java.util.ArrayList;
 
 public class TaskSyncAdapter extends AbstractThreadedSyncAdapter {
     private static final String LOG_TAG = "TaskSyncAdapter";
+
     private Context mContext;
     private TasksQueryHelper mTasksHelper;
     private TypesQueryHelper mTypesHelper;
+
     public TaskSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
         mContext = context;

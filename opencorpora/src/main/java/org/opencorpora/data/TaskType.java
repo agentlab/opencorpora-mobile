@@ -4,6 +4,7 @@ public class TaskType {
     private int mId;
     private String mName;
     private int mComplexity;
+
     public TaskType(int id, String name, int complexity){
         mComplexity = complexity;
         mId = id;

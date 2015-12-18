@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-
 public class OpenCorporaActivity extends Activity {
     private TextView mTextView;
 
