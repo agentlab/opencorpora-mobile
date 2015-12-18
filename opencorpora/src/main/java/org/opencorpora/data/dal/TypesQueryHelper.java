@@ -53,7 +53,8 @@ public class TypesQueryHelper {
         db.endTransaction();
 
         long timeDiff = System.currentTimeMillis() - startTime;
-        Log.i(LOG_TAG, "Types saved in " + timeDiff);
+        Log.i(LOG_TAG, "Types save completed. Count: " + types.size()
+                + ". Time(ms): " + timeDiff);
     }
 
     public HashMap<Integer, TaskType> loadTypes(){
@@ -80,7 +81,8 @@ public class TypesQueryHelper {
         cursor.close();
 
         long timeDiff = System.currentTimeMillis() - startTime;
-        Log.i(LOG_TAG, "Types loaded in " + timeDiff);
+        Log.i(LOG_TAG, "Types load complete. Count: " + result.size()
+                + ". Time(ms): " + timeDiff);
 
         return result;
     }

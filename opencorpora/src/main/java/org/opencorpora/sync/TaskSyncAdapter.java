@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import org.opencorpora.InternalContract;
+import org.opencorpora.data.SolvedTask;
 import org.opencorpora.data.TaskType;
 import org.opencorpora.data.dal.TasksQueryHelper;
 import org.opencorpora.data.dal.TypesQueryHelper;
@@ -38,6 +39,7 @@ public class TaskSyncAdapter extends AbstractThreadedSyncAdapter {
                               ContentProviderClient provider,
                               SyncResult syncResult) {
         Log.i(LOG_TAG, "Start sync");
+        long startTime = System.currentTimeMillis();
         try {
             String token = AccountManager.get(mContext)
                     .blockingGetAuthToken(account, InternalContract.AUTH_TOKEN_TYPE, false);
@@ -50,17 +52,32 @@ public class TaskSyncAdapter extends AbstractThreadedSyncAdapter {
         ArrayList<TaskType> types = new ArrayList<>(); // stub
         mTypesHelper.updateTypes(types);
 
-        mTasksHelper.sendCompleted();
+        sendCompleted();
         ArrayList<Integer> tasksIds = mTasksHelper.getTaskIdsForActualize();
         // ToDo: actualize tasksIds
         tasksIds.clear();                                   // stub
         ArrayList<Integer> old = new ArrayList<>(tasksIds); // stub
         mTasksHelper.removeTasksByIds(old);
 
-        Log.i(LOG_TAG, "Sync is completed");
+        long diffTime = System.currentTimeMillis() - startTime;
+        Log.i(LOG_TAG, "Sync completed in " + diffTime);
     }
 
+    public void sendCompleted() {
+        ArrayList<SolvedTask> tasksForSend = mTasksHelper.getReadyTasks();
+        boolean success = false;
+        for (SolvedTask task:
+                tasksForSend) {
+            Log.d(LOG_TAG, "Send task with id:" + task.getId());
+            // ToDo: implement logic for sending tasks to server
+            // Logic for send task to server
+            success = true;
+        }
 
+        if(success){
+            mTasksHelper.deleteCompletedTasks(tasksForSend);
+        }
 
-
+        Log.d(LOG_TAG, "Send ready tasks completed.");
+    }
 }

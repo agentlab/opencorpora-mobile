@@ -36,9 +36,6 @@ public class TasksQueryHelper {
             + TASK_TYPE_ID_COLUMN + " = "
             + COMPLETED_TASK_TYPE_COLUMN;
 
-    private static final String SQL_GET_TASKS_BY_TYPE = "";
-    private static final String SQL_INSERT_NEW_TASKS = "";
-
     private DatabaseHelper mDbHelper;
 
     public TasksQueryHelper(Context context){
@@ -47,6 +44,7 @@ public class TasksQueryHelper {
 
     public ArrayList<SolvedTask> getReadyTasks(){
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        long startTime = System.currentTimeMillis();
         Cursor cursor = db.rawQuery(SQL_GET_ALL_COMPLETED_TASKS, null);
         ArrayList<SolvedTask> result = new ArrayList<>();
         cursor.moveToFirst();
@@ -75,13 +73,15 @@ public class TasksQueryHelper {
 
         cursor.close();
 
-        Log.d(LOG_TAG, "Tasks fetched: " + result.size());
+        long diffTime = System.currentTimeMillis() - startTime;
+        Log.d(LOG_TAG, "Tasks fetched: " + result.size() + ". Time(ms):" + diffTime);
 
         return result;
     }
 
     public ArrayList<Integer> getTaskIdsForActualize() {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        long startTime = System.currentTimeMillis();
         Cursor cursor = db.query(TASK_TABLE_NAME,
                 new String[]{TASK_ID_COLUMN},
                 null, null, null, null, null);
@@ -94,12 +94,15 @@ public class TasksQueryHelper {
         }
 
         cursor.close();
-
+        long diffTime = System.currentTimeMillis() - startTime;
+        Log.i(LOG_TAG, "Getting ids for actualize completed. Count: "
+                + taskForActualize.size() + ". Time(ms): " + diffTime);
         return taskForActualize;
     }
 
     public void removeTasksByIds(ArrayList<Integer> tasks){
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        long startTime = System.currentTimeMillis();
         db.beginTransaction();
         for (Integer taskId
                 : tasks){
@@ -108,28 +111,16 @@ public class TasksQueryHelper {
                     new String[]{ taskId.toString() });
         }
         db.endTransaction();
-    }
 
-    public void sendCompleted() {
-        ArrayList<SolvedTask> tasksForSend = getReadyTasks();
-        boolean success = false;
-        for (SolvedTask task:
-                tasksForSend) {
-            Log.d(LOG_TAG, "Send task with id:" + task.getId());
-            // ToDo: implement logic for sending tasks to server
-            // Logic for send task to server
-            success = true;
-        }
-
-        if(success){
-            deleteCompletedTasks(tasksForSend);
-        }
-
-        Log.d(LOG_TAG, "Send sync complete.");
+        long diffTime = System.currentTimeMillis() - startTime;
+        Log.i(LOG_TAG, "Removing not actual tasks by id completed. Count: "
+                + tasks.size() + ". Time(ms): " + diffTime);
     }
 
     public void saveTasks(ArrayList<Task> tasks){
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        long startTime = System.currentTimeMillis();
+
         for (Task task :
                 tasks) {
             ContentValues values = new ContentValues();
@@ -154,19 +145,26 @@ public class TasksQueryHelper {
             Log.d(LOG_TAG, "Task " + task.getId() + " successfully saved");
         }
 
-        Log.d(LOG_TAG, "Saving complete. Count: " + tasks.size());
+        long diffTime = System.currentTimeMillis() - startTime;
+        Log.d(LOG_TAG, "Saving complete. Count: " + tasks.size() + ". Time(ms): " + diffTime);
     }
 
-    private void deleteCompletedTasks(ArrayList<SolvedTask> tasks) {
+    public void deleteCompletedTasks(ArrayList<SolvedTask> tasks) {
+        Log.i(LOG_TAG, "Starting deletion completed tasks");
+        long startTime = System.currentTimeMillis();
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        db.beginTransaction();
         for (SolvedTask task:
                 tasks) {
             String whereClause = COMPLETED_TASK_ID_COLUMN + " = ? ";
             Integer id = task.getId();
-            db.delete(COMPLETED_TASK_TABLE_NAME, whereClause, new String[] { id.toString() });
+
+            db.delete(COMPLETED_TASK_TABLE_NAME, whereClause, new String[]{id.toString()});
+
             Log.i(LOG_TAG, "Task " + id + " deleted.");
         }
-
-        Log.d(LOG_TAG, "Complete tasks deletion. Count: " + tasks.size());
+        db.endTransaction();
+        long diffTime = System.currentTimeMillis() - startTime;
+        Log.d(LOG_TAG, "Complete tasks deletion. Count: " + tasks.size() + ". Time(ms):" + diffTime);
     }
 }
