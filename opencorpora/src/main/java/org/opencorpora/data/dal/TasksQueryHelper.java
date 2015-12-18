@@ -167,4 +167,42 @@ public class TasksQueryHelper {
         long diffTime = System.currentTimeMillis() - startTime;
         Log.d(LOG_TAG, "Complete tasks deletion. Count: " + tasks.size() + ". Time(ms):" + diffTime);
     }
+
+    public ArrayList<Task> getTasksByType(TaskType type){
+        ArrayList<Task> result = new ArrayList<>();
+        long startTime = System.currentTimeMillis();
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        Cursor cursor = db.query(TASK_TABLE_NAME,
+                new String[]{
+                        TASK_ID_COLUMN,
+                        TASK_TARGET_COLUMN,
+                        TASK_LEFT_CONTEXT_COLUMN,
+                        TASK_RIGHT_CONTEXT_COLUMN,
+                        TASK_HAS_INSTRUCTION_COLUMN
+                },
+                TASK_TYPE_COLUMN + " = " + "?",
+                new String[]{
+                        Integer.toString(type.getId())
+                },
+                null,
+                null,
+                null);
+
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast()){
+            Bundle record = cursor.getExtras();
+            int id = record.getInt(TASK_ID_COLUMN);
+            String target = record.getString(TASK_TARGET_COLUMN);
+            String leftContext = record.getString(TASK_LEFT_CONTEXT_COLUMN);
+            String rightContext = record.getString(TASK_RIGHT_CONTEXT_COLUMN);
+            boolean hasInstruction = record.getBoolean(TASK_HAS_INSTRUCTION_COLUMN);
+            result.add(new Task(id, type, target, leftContext, rightContext, hasInstruction));
+        }
+
+        cursor.close();
+        long diffTime = System.currentTimeMillis() - startTime;
+        Log.i(LOG_TAG, "Task by type receiving completed. Count: "
+                + result.size() + " . Time(ms): " + diffTime);
+        return result;
+    }
 }
