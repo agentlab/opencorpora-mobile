@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class TaskDatabaseHelper extends SQLiteOpenHelper {
+public class DatabaseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "opencorpora_db";
 
@@ -79,7 +79,7 @@ public class TaskDatabaseHelper extends SQLiteOpenHelper {
             + "FOREIGN KEY(" + COMPLETED_TASK_TYPE_COLUMN + ") REFERENCES "
             + TASK_TYPE_TABLE_NAME + "(" + TASK_TYPE_ID_COLUMN + "));";
 
-    public TaskDatabaseHelper(Context context) {
+    public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
