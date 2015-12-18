@@ -43,41 +43,39 @@ public class TaskDatabaseHelper extends SQLiteOpenHelper {
     public static final String COMPLETED_TASK_IS_COMMENTED_COLUMN = "is_commented";
     public static final String COMPLETED_TASK_COMMENT_COLUMN = "comment_text";
 
-    private static final String COMMA = ", ";
-
     private static final String TASK_TYPE_TABLE_CREATE = "CREATE TABLE " + TASK_TYPE_TABLE_NAME
-            + "(" + TASK_TYPE_ID_COLUMN + " INTEGER PRIMARY KEY " + COMMA
-            + TASK_TYPE_NAME_COLUMN + " TEXT " + COMMA
+            + "(" + TASK_TYPE_ID_COLUMN + " INTEGER PRIMARY KEY " + ", "
+            + TASK_TYPE_NAME_COLUMN + " TEXT " + ", "
             + TASK_TYPE_COMPLEXITY_COLUMN + "INTEGER" + ");";
 
     private static final String TASK_TABLE_CREATE = "CREATE TABLE " + TASK_TABLE_NAME + "("
-            + TASK_ID_COLUMN + " INTEGER PRIMARY KEY " + COMMA
-            + TASK_TYPE_COLUMN + " INTEGER " + COMMA
-            + TASK_TARGET_COLUMN + " TEXT " + COMMA
-            + TASK_LEFT_CONTEXT_COLUMN + " TEXT " + COMMA
-            + TASK_RIGHT_CONTEXT_COLUMN + " TEXT " + COMMA
-            + TASK_HAS_INSTRUCTION_COLUMN + " BOOLEAN " + COMMA
+            + TASK_ID_COLUMN + " INTEGER PRIMARY KEY " + ", "
+            + TASK_TYPE_COLUMN + " INTEGER " + ", "
+            + TASK_TARGET_COLUMN + " TEXT " + ", "
+            + TASK_LEFT_CONTEXT_COLUMN + " TEXT " + ", "
+            + TASK_RIGHT_CONTEXT_COLUMN + " TEXT " + ", "
+            + TASK_HAS_INSTRUCTION_COLUMN + " BOOLEAN " + ", "
             + "FOREIGN KEY(" + TASK_TYPE_COLUMN + ") REFERENCES "
             + TASK_TYPE_TABLE_NAME + "(" + TASK_TYPE_ID_COLUMN + "));";
 
     private static final String CHOICE_TABLE_CREATE = "CREATE TABLE " + CHOICE_TABLE_NAME + "("
-            + CHOICE_ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT " + COMMA
-            + CHOICE_TASK_ID_COLUMN + " INTEGER " + COMMA
-            + CHOICE_ANSWER_COLUMN + " TEXT " + COMMA
-            + CHOICE_ANSWER_NUM_COLUMN + " INTEGER " + COMMA
+            + CHOICE_ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT " + ", "
+            + CHOICE_TASK_ID_COLUMN + " INTEGER " + ", "
+            + CHOICE_ANSWER_COLUMN + " TEXT " + ", "
+            + CHOICE_ANSWER_NUM_COLUMN + " INTEGER " + ", "
             + "FOREIGN KEY(" + CHOICE_TASK_ID_COLUMN + ") REFERENCES "
             + TASK_TABLE_NAME + "(" + TASK_ID_COLUMN + "));";
 
     private static final String COMPLETED_TASK_TABLE_CREATE =
             "CREATE TABLE " + COMPLETED_TASK_TABLE_NAME + "("
-            + COMPLETED_TASK_ID_COLUMN + " INTEGER PRIMARY KEY " + COMMA
-            + COMPLETED_TASK_TYPE_COLUMN + " INTEGER " + COMMA
-            + COMPLETED_TASK_ANSWER_COLUMN + " TEXT " + COMMA
-            + COMPLETED_TASK_SECONDS_COLUMN + " INTEGER " + COMMA
-            + COMPLETED_TASK_IS_LEFT_SHOWED_COLUMN + " BOOLEAN " + COMMA
-            + COMPLETED_TASK_IS_RIGHT_SHOWED_COLUMN + " BOOLEAN " + COMMA
-            + COMPLETED_TASK_IS_COMMENTED_COLUMN + " BOOLEAN " + COMMA
-            + COMPLETED_TASK_COMMENT_COLUMN + "TEXT" + COMMA
+            + COMPLETED_TASK_ID_COLUMN + " INTEGER PRIMARY KEY " + ", "
+            + COMPLETED_TASK_TYPE_COLUMN + " INTEGER " + ", "
+            + COMPLETED_TASK_ANSWER_COLUMN + " TEXT " + ", "
+            + COMPLETED_TASK_SECONDS_COLUMN + " INTEGER " + ", "
+            + COMPLETED_TASK_IS_LEFT_SHOWED_COLUMN + " BOOLEAN " + ", "
+            + COMPLETED_TASK_IS_RIGHT_SHOWED_COLUMN + " BOOLEAN " + ", "
+            + COMPLETED_TASK_IS_COMMENTED_COLUMN + " BOOLEAN " + ", "
+            + COMPLETED_TASK_COMMENT_COLUMN + "TEXT" + ", "
             + "FOREIGN KEY(" + COMPLETED_TASK_TYPE_COLUMN + ") REFERENCES "
             + TASK_TYPE_TABLE_NAME + "(" + TASK_TYPE_ID_COLUMN + "));";
 

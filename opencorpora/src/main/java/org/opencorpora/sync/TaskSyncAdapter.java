@@ -36,18 +36,17 @@ public class TaskSyncAdapter extends AbstractThreadedSyncAdapter {
         mContext = context;
         mDbHelper = new TaskDatabaseHelper(context);
     }
-
-    private static final String COMMA = ", ";
+    
     private static final String SQL_GET_ALL_COMPLETED_TASKS = "SELECT "
-            + COMPLETED_TASK_ID_COLUMN + COMMA
-            + COMPLETED_TASK_TYPE_COLUMN + COMMA
-            + COMPLETED_TASK_ANSWER_COLUMN + COMMA
-            + COMPLETED_TASK_SECONDS_COLUMN + COMMA
-            + COMPLETED_TASK_IS_LEFT_SHOWED_COLUMN + COMMA
-            + COMPLETED_TASK_IS_RIGHT_SHOWED_COLUMN + COMMA
-            + COMPLETED_TASK_IS_COMMENTED_COLUMN + COMMA
-            + COMPLETED_TASK_COMMENT_COLUMN + COMMA
-            + TASK_TYPE_NAME_COLUMN + COMMA
+            + COMPLETED_TASK_ID_COLUMN + ", "
+            + COMPLETED_TASK_TYPE_COLUMN + ", "
+            + COMPLETED_TASK_ANSWER_COLUMN + ", "
+            + COMPLETED_TASK_SECONDS_COLUMN + ", "
+            + COMPLETED_TASK_IS_LEFT_SHOWED_COLUMN + ", "
+            + COMPLETED_TASK_IS_RIGHT_SHOWED_COLUMN + ", "
+            + COMPLETED_TASK_IS_COMMENTED_COLUMN + ", "
+            + COMPLETED_TASK_COMMENT_COLUMN + ", "
+            + TASK_TYPE_NAME_COLUMN + ", "
             + TASK_TYPE_COMPLEXITY_COLUMN + " "
             + " FROM " + COMPLETED_TASK_TABLE_NAME
             + " JOIN " + TASK_TYPE_TABLE_NAME + " ON "
