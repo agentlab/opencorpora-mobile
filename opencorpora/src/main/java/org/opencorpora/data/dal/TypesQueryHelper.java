@@ -3,16 +3,21 @@ package org.opencorpora.data.dal;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 import android.util.Log;
 
 import org.opencorpora.data.DatabaseHelper;
-import org.opencorpora.data.Task;
 import org.opencorpora.data.TaskType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
-import static org.opencorpora.data.DatabaseHelper.*;
+import static org.opencorpora.data.DatabaseHelper.TASK_TYPE_COMPLEXITY_COLUMN;
+import static org.opencorpora.data.DatabaseHelper.TASK_TYPE_ID_COLUMN;
+import static org.opencorpora.data.DatabaseHelper.TASK_TYPE_NAME_COLUMN;
+import static org.opencorpora.data.DatabaseHelper.TASK_TYPE_TABLE_NAME;
 
 
 public class TypesQueryHelper {
@@ -48,10 +53,29 @@ public class TypesQueryHelper {
         db.endTransaction();
 
         long timeDiff = System.currentTimeMillis() - startTime;
-        Log.i(LOG_TAG, "Complete types save in " + timeDiff);
+        Log.i(LOG_TAG, "Types saved in " + timeDiff);
     }
 
-    public ArrayList<TaskType> loadTypes(){
-        return new ArrayList<>();
+    public HashMap<Integer, TaskType> loadTypes(){
+        HashMap<Integer, TaskType> result = new HashMap<>();
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        Cursor cursor = db.query(TASK_TYPE_TABLE_NAME,
+                new String[]{
+                        TASK_TYPE_ID_COLUMN,
+                        TASK_TYPE_NAME_COLUMN,
+                        TASK_TYPE_COMPLEXITY_COLUMN
+                }, null, null, null, null, null);
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast()){
+            Bundle record = cursor.getExtras();
+            int id = record.getInt(TASK_TYPE_ID_COLUMN);
+            String name = record.getString(TASK_TYPE_NAME_COLUMN);
+            int complexity = record.getInt(TASK_TYPE_COMPLEXITY_COLUMN);
+            TaskType type = new TaskType(id, name, complexity);
+            result.put(id, type);
+        }
+        cursor.close();
+
+        return result;
     }
 }
