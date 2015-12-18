@@ -9,19 +9,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import org.opencorpora.InternalContract;
 import org.opencorpora.R;
 
 
 public class AuthenticatorActivity extends AccountAuthenticatorActivity {
-    public final static String ARG_ACCOUNT_TYPE = "org.opencorpora";
-    public final static String ARG_AUTH_TYPE = "login_pass_auth";
-    public final static String ARG_ACCOUNT_NAME = "opencorpora_account";
-    public final static String ARG_IS_ADDING_NEW_ACCOUNT = "is_adding_account";
-
-    public final static String PARAM_USER_PASS = "user_password";
-
     private AuthHelper mServerAuthenticate;
-    private final static String mAuthTokenType = "any_token_type";
     private AccountManager mAccountManager;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +37,10 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             protected Intent doInBackground(Void... params) {
                 String authToken = mServerAuthenticate.signIn(userName, userPass);
                 final Intent res = new Intent();
-                res.putExtra(AccountManager.KEY_ACCOUNT_NAME, userName);
-                res.putExtra(AccountManager.KEY_ACCOUNT_TYPE, ARG_ACCOUNT_TYPE);
-                res.putExtra(AccountManager.KEY_AUTHTOKEN, authToken);
-                res.putExtra(PARAM_USER_PASS, userPass);
+                res.putExtra(InternalContract.KEY_ACCOUNT_NAME, userName);
+                res.putExtra(InternalContract.KEY_ACCOUNT_TYPE, InternalContract.ACCOUNT_TYPE);
+                res.putExtra(InternalContract.KEY_AUTH_TOKEN, authToken);
+                res.putExtra(InternalContract.KEY_USER_PASSWORD, userPass);
                 return res;
             }
             @Override
@@ -58,13 +51,14 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     }
 
     private void finishLogin(Intent intent) {
-        String accountName = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-        String accountPassword = intent.getStringExtra(PARAM_USER_PASS);
-        final Account account =
-                new Account(accountName, intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE));
-        if (getIntent().getBooleanExtra(ARG_IS_ADDING_NEW_ACCOUNT, false)) {
-            String authToken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
-            String authTokenType = mAuthTokenType;
+        String accountName = intent.getStringExtra(InternalContract.KEY_ACCOUNT_NAME);
+        String accountPassword = intent.getStringExtra(InternalContract.KEY_USER_PASSWORD);
+        final Account account = 
+                new Account(accountName, intent.getStringExtra(InternalContract.KEY_ACCOUNT_TYPE));
+        if (getIntent().getBooleanExtra(InternalContract.KEY_IS_ADDING_NEW_ACCOUNT, false)) {
+            String authToken = intent.getStringExtra(InternalContract.KEY_AUTH_TOKEN);
+            String authTokenType = InternalContract.AUTH_TOKEN_TYPE;
+
             mAccountManager.addAccountExplicitly(account, accountPassword, null);
             mAccountManager.setAuthToken(account, authTokenType, authToken);
         } else {
