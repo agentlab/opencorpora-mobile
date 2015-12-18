@@ -59,6 +59,9 @@ public class TypesQueryHelper {
     public HashMap<Integer, TaskType> loadTypes(){
         HashMap<Integer, TaskType> result = new HashMap<>();
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        long startTime = System.currentTimeMillis();
+
         Cursor cursor = db.query(TASK_TYPE_TABLE_NAME,
                 new String[]{
                         TASK_TYPE_ID_COLUMN,
@@ -75,6 +78,9 @@ public class TypesQueryHelper {
             result.put(id, type);
         }
         cursor.close();
+
+        long timeDiff = System.currentTimeMillis() - startTime;
+        Log.i(LOG_TAG, "Types loaded in " + timeDiff);
 
         return result;
     }
