@@ -12,18 +12,23 @@ import android.os.Bundle;
 import android.util.Log;
 
 import org.opencorpora.InternalContract;
+import org.opencorpora.data.TaskType;
 import org.opencorpora.data.dal.TasksQueryHelper;
+import org.opencorpora.data.dal.TypesQueryHelper;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class TaskSyncAdapter extends AbstractThreadedSyncAdapter {
     private static final String LOG_TAG = "TaskSyncAdapter";
     private Context mContext;
     private TasksQueryHelper mTasksHelper;
+    private TypesQueryHelper mTypesHelper;
     public TaskSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
         mContext = context;
         mTasksHelper = new TasksQueryHelper(context);
+        mTypesHelper = new TypesQueryHelper(context);
     }
 
     @Override
@@ -41,8 +46,16 @@ public class TaskSyncAdapter extends AbstractThreadedSyncAdapter {
             e.printStackTrace();
         }
 
+        // ToDo: send response for load available types
+        ArrayList<TaskType> types = new ArrayList<>(); // stub
+        mTypesHelper.updateTypes(types);
+
         mTasksHelper.sendCompleted();
-        mTasksHelper.getTaskIdsForActualize();
+        ArrayList<Integer> tasksIds = mTasksHelper.getTaskIdsForActualize();
+        // ToDo: actualize tasksIds
+        tasksIds.clear();                                   // stub
+        ArrayList<Integer> old = new ArrayList<>(tasksIds); // stub
+        mTasksHelper.removeTasksByIds(old);
 
         Log.i(LOG_TAG, "Sync is completed");
     }
