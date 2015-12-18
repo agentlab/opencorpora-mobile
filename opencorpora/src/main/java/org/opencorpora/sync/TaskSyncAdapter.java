@@ -42,7 +42,7 @@ public class TaskSyncAdapter extends AbstractThreadedSyncAdapter {
         }
 
         mTasksHelper.sendCompleted();
-        mTasksHelper.actualizeOldTasks();
+        mTasksHelper.getTaskIdsForActualize();
 
         Log.i(LOG_TAG, "Sync is completed");
     }

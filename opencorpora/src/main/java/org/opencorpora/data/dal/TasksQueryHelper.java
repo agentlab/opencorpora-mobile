@@ -48,7 +48,7 @@ public class TasksQueryHelper {
     public ArrayList<SolvedTask> getReadyTasks(){
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery(SQL_GET_ALL_COMPLETED_TASKS, null);
-        ArrayList<SolvedTask> result = new ArrayList<>(cursor.getCount());
+        ArrayList<SolvedTask> result = new ArrayList<>();
         cursor.moveToFirst();
         while (!cursor.isAfterLast()){
             Bundle record = cursor.getExtras();
@@ -78,6 +78,36 @@ public class TasksQueryHelper {
         Log.d(LOG_TAG, "Tasks fetched: " + result.size());
 
         return result;
+    }
+
+    public ArrayList<Integer> getTaskIdsForActualize() {
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        Cursor cursor = db.query(TASK_TABLE_NAME,
+                new String[]{TASK_ID_COLUMN},
+                null, null, null, null, null);
+        ArrayList<Integer> taskForActualize = new ArrayList<>();
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast()){
+            Bundle record = cursor.getExtras();
+            taskForActualize.add(record.getInt(TASK_ID_COLUMN));
+            cursor.moveToNext();
+        }
+
+        cursor.close();
+
+        return taskForActualize;
+    }
+
+    public void removeTasksByIds(ArrayList<Integer> tasks){
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        db.beginTransaction();
+        for (Integer taskId
+                : tasks){
+            db.delete(TASK_TABLE_NAME,
+                    TASK_TABLE_NAME + "." + TASK_ID_COLUMN + "=" + "?",
+                    new String[]{ taskId.toString() });
+        }
+        db.endTransaction();
     }
 
     public void sendCompleted() {
@@ -125,9 +155,6 @@ public class TasksQueryHelper {
         }
 
         Log.d(LOG_TAG, "Saving complete. Count: " + tasks.size());
-    }
-
-    public void actualizeOldTasks() {
     }
 
     private void deleteCompletedTasks(ArrayList<SolvedTask> tasks) {
