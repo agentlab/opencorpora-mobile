@@ -61,30 +61,21 @@ public class TaskSyncAdapter extends AbstractThreadedSyncAdapter {
         ArrayList<TaskType> types = client.getTypes(account.name, token);
         mTypesHelper.updateTypes(types);
 
-        sendCompleted();
         ArrayList<Integer> tasksIds = mTasksHelper.getTaskIdsForActualize();
         ArrayList<Integer> old = client.actualizeTasks(tasksIds, account.name, token);
         tasksIds.removeAll(old);
         mTasksHelper.removeTasksByIds(tasksIds);
 
-        long diffTime = System.currentTimeMillis() - startTime;
-        Log.i(LOG_TAG, "Sync completed in " + diffTime + " ms.");
-    }
+        client.getTasksByType(account.name, token, types.get(0));
 
-    public void sendCompleted() {
-        ArrayList<SolvedTask> tasksForSend = mTasksHelper.getReadyTasks();
-        boolean success = false;
-        for (SolvedTask task : tasksForSend) {
-            Log.d(LOG_TAG, "Send task with id:" + task.getId());
-            // ToDo: implement logic for sending tasks to server
-            // Logic for send task to server
-            success = true;
-        }
+        ArrayList<SolvedTask> readyTasks = mTasksHelper.getReadyTasks();
+        boolean success = client.putReadyTasks(account.name, token, readyTasks);
 
         if(success) {
-            mTasksHelper.deleteCompletedTasks(tasksForSend);
+            mTasksHelper.deleteCompletedTasks(readyTasks);
         }
 
-        Log.d(LOG_TAG, "Send ready tasks completed.");
+        long diffTime = System.currentTimeMillis() - startTime;
+        Log.i(LOG_TAG, "Sync completed in " + diffTime + " ms.");
     }
 }

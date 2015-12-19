@@ -36,7 +36,7 @@ public class SolvedTask extends BaseTask {
         mIsLeftContextShowed = value;
     }
 
-    public boolean isIsRightContextShowed() {
+    public boolean isRightContextShowed() {
         return mIsRightContextShowed;
     }
 
@@ -44,7 +44,7 @@ public class SolvedTask extends BaseTask {
         mIsRightContextShowed = value;
     }
 
-    public boolean IsCommented() {
+    public boolean isCommented() {
         return mIsCommented;
     }
 

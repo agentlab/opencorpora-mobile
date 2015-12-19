@@ -41,9 +41,8 @@ public class TypesQueryHelper {
             values.put(TASK_TYPE_ID_COLUMN, type.getId());
             values.put(TASK_TYPE_NAME_COLUMN, type.getName());
             values.put(TASK_TYPE_COMPLEXITY_COLUMN, type.getComplexity());
-            long insertResult = db.insertWithOnConflict(TASK_TYPE_TABLE_NAME,
+            db.insertWithOnConflict(TASK_TYPE_TABLE_NAME,
                     TASK_TYPE_ID_COLUMN, values, SQLiteDatabase.CONFLICT_REPLACE);
-            Log.i(LOG_TAG, "Insert returns: " + insertResult);
         }
 
         db.setTransactionSuccessful();

@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.opencorpora.BuildConfig;
+import org.opencorpora.data.SolvedTask;
 import org.opencorpora.data.Task;
 import org.opencorpora.data.TaskType;
 
@@ -27,7 +28,8 @@ public class OpenCorporaClient {
     private static final String LOG_TAG = "OpenCorporaClient";
     private static final String TYPES_URL = BuildConfig.server_address + "api/pool_types.php";
     private static final String ACTUALIZE_URL = BuildConfig.server_address + "api/tasks.php";
-    private static final String TASKS_BY_TYPE_URL = BuildConfig.server_address + "/api/tasks.php";
+    private static final String TASKS_BY_TYPE_URL = BuildConfig.server_address + "api/tasks.php";
+    private static final String PUT_READY_TASKS_URL = BuildConfig.server_address + "api/tasks.php";
 
     private OpenCorporaRequestQueue mQueue;
 
@@ -144,7 +146,8 @@ public class OpenCorporaClient {
                 String rightContext = task.getString("right_context");
                 boolean hasInstruction = task.getBoolean("has_instruction");
                 HashMap<Integer, String> choices = parseChoices(task.getJSONArray("choices"));
-                Task newTask = new Task(id, type, target, leftContext, rightContext, hasInstruction);
+                Task newTask =
+                        new Task(id, type, target, leftContext, rightContext, hasInstruction);
                 newTask.setChoices(choices);
             }
         } catch (InterruptedException | ExecutionException | TimeoutException | JSONException e) {
@@ -154,8 +157,67 @@ public class OpenCorporaClient {
         return result;
     }
 
+    public boolean putReadyTasks(final String uid,
+                              final String token,
+                              ArrayList<SolvedTask> readyTasks){
+        if(readyTasks.size() == 0) return true;
+        RequestFuture<JSONObject> future = RequestFuture.newFuture();
+        JSONObject tasksJSON = new JSONObject();
+        JSONArray tasksArray = new JSONArray();
+
+        try {
+            for (SolvedTask task:
+                    readyTasks) {
+                JSONObject json = new JSONObject();
+                json.put("id", task.getId());
+                json.put("answer", task.getAnswer());
+                json.put("seconds_before_answer", task.getSecondsBeforeAnswer());
+                json.put("is_left_context_showed", task.isLeftContextShowed());
+                json.put("is_right_context_showed", task.isRightContextShowed());
+                json.put("is_commented", task.isCommented());
+                json.put("comment_text", task.getComment());
+                tasksArray.put(json);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest request =
+                new JsonObjectRequest(Request.Method.PUT,
+                        PUT_READY_TASKS_URL,
+                        tasksJSON,
+                        future,
+                        future){
+                    protected Map<String, String> getParams() {
+                        Map<String, String> params = new HashMap<>();
+                        params.put("uid", uid);
+                        params.put("token", token);
+                        return params;
+                    }
+                };
+        mQueue.getRequestQueue().add(request);
+
+        boolean success = false;
+        try {
+            JSONObject response = future.get(10, TimeUnit.SECONDS);
+            if(response.has("error")){
+                Log.w(LOG_TAG, "Task sending failed");
+            }
+            else{
+                Log.i(LOG_TAG,
+                        "Ready tasks successfully posted. Count: " + readyTasks.size() + ".");
+                success = true;
+            }
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            e.printStackTrace();
+        }
+
+        return success;
+    }
+
     private HashMap<Integer, String> parseChoices(JSONArray choices) throws JSONException {
         HashMap<Integer, String> result = new HashMap<>();
+
         for(int i = 0; i < choices.length(); ++i){
             JSONObject choice = choices.getJSONObject(i);
             Iterator<String> keys = choice.keys();
