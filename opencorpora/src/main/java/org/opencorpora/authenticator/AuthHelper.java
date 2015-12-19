@@ -1,53 +1,58 @@
 package org.opencorpora.authenticator;
 
+import android.content.Context;
 import android.util.Log;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-import com.loopj.android.http.SyncHttpClient;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.opencorpora.BuildConfig;
+import org.opencorpora.data.api.OpenCorporaRequestQueue;
 
-import cz.msebera.android.httpclient.Header;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 class AuthHelper {
     private static final String LOG_TAG = "AuthHelper";
+    private static final String AUTH_URL = BuildConfig.server_address + "api/login.php";
 
-    private String mResult;
+    private Context mContext;
 
-    public synchronized String signIn(String username, String password) {
-        SyncHttpClient client = new SyncHttpClient();
-        RequestParams params = new RequestParams();
-        params.add("login", username);
-        params.add("password", password);
-        mResult = null;
-        client.post(BuildConfig.server_address + "api/login.php",
-                params,
-                new JsonHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
-                        try {
-                            Log.i(LOG_TAG, "Request successful");
-                            mResult = response.getString("token");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+    public AuthHelper(Context context){
+        mContext = context;
+    }
+
+    public String singIn(String username, String password){
+        final String uid = username;
+        final String passwordValue = password;
+        RequestFuture<JSONObject> future = RequestFuture.newFuture();
+        JsonObjectRequest request =
+                new JsonObjectRequest(Request.Method.POST ,AUTH_URL, future, future){
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String, String> params = new HashMap<>();
+                        params.put("login", uid);
+                        params.put("token", passwordValue);
+                        return params;
                     }
+                };
+        OpenCorporaRequestQueue.getInstance(mContext).getRequestQueue().add(request);
+        String token = null;
 
-                    @Override
-                    public void onFailure(int statusCode,
-                                          Header[] headers,
-                                          Throwable throwable,
-                                          JSONObject errorResponse) {
-                        super.onFailure(statusCode, headers, throwable, errorResponse);
-                        Log.i(LOG_TAG, "Request failed");
-                    }
-                }
-        );
+        try{
+            JSONObject response = future.get(10, TimeUnit.SECONDS);
+            token = response.getString("token");
+            Log.i(LOG_TAG, "Auth request successfully complete. Token: " + token);
+        } catch (InterruptedException | ExecutionException | TimeoutException | JSONException e) {
+            e.printStackTrace();
+        }
 
-        return mResult;
+        return token;
     }
 }

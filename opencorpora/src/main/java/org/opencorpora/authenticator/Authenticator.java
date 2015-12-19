@@ -22,7 +22,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
     public Authenticator(Context context) {
         super(context);
         mContext = context;
-        mAuthService = new AuthHelper();
+        mAuthService = new AuthHelper(context);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
             final String password = manager.getPassword(account);
 
             if(password != null) {
-                authToken = mAuthService.signIn(account.name, password);
+                authToken = mAuthService.singIn(account.name, password);
             }
         }
 

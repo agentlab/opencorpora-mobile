@@ -8,11 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import org.opencorpora.data.TaskType;
-import org.opencorpora.data.api.OpenCorporaClient;
-
-import java.util.ArrayList;
-
 public class OpenCorporaActivity extends Activity {
     private TextView mTextView;
 
