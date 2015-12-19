@@ -31,18 +31,24 @@ public class TypesQueryHelper {
 
         /* We can not bulk insert with SQLiteDatabase object.*/
         long startTime = System.currentTimeMillis();
+
+        Log.i(LOG_TAG, "Insert values into "+ db.getPath());
+
         db.beginTransaction();
         for(TaskType type : types) {
             values.clear();
+
             values.put(TASK_TYPE_ID_COLUMN, type.getId());
             values.put(TASK_TYPE_NAME_COLUMN, type.getName());
             values.put(TASK_TYPE_COMPLEXITY_COLUMN, type.getComplexity());
-            db.insertWithOnConflict(TASK_TYPE_TABLE_NAME,
-                    null, values, SQLiteDatabase.CONFLICT_REPLACE);
+            long insertResult = db.insertWithOnConflict(TASK_TYPE_TABLE_NAME,
+                    TASK_TYPE_ID_COLUMN, values, SQLiteDatabase.CONFLICT_REPLACE);
+            Log.i(LOG_TAG, "Insert returns: " + insertResult);
         }
 
         db.setTransactionSuccessful();
         db.endTransaction();
+        db.close();
 
 
         long timeDiff = System.currentTimeMillis() - startTime;
