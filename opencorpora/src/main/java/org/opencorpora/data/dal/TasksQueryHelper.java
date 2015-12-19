@@ -128,7 +128,6 @@ public class TasksQueryHelper {
         }
         db.setTransactionSuccessful();
         db.endTransaction();
-
         long diffTime = System.currentTimeMillis() - startTime;
         Log.i(LOG_TAG, "Removing not actual tasks by id completed. Count: "
                 + tasks.size() + ". Time(ms): " + diffTime);

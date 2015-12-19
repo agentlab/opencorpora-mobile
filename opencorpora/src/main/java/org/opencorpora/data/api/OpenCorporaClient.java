@@ -32,16 +32,14 @@ public class OpenCorporaClient {
         mQueue = OpenCorporaRequestQueue.getInstance(context);
     }
 
-    public ArrayList<TaskType> getTypes(String uid, String token){
-        final String uidValue = uid;
-        final String tokenValue = token;
+    public ArrayList<TaskType> getTypes(final String uid, final String token){
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
         JsonObjectRequest request =
                 new JsonObjectRequest(Request.Method.GET ,TYPES_URL, future, future){
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String, String> params = new HashMap<>();
-                        params.put("uid", uidValue);
-                        params.put("token", tokenValue);
+                        params.put("uid", uid);
+                        params.put("token", token);
                         return params;
                     }
                 };
@@ -66,9 +64,9 @@ public class OpenCorporaClient {
     }
 
     // Returns only actual tasks
-    public ArrayList<Integer> actualizeTasks(ArrayList<Integer> taskIds, String uid, String token){
-        final String uidValue = uid;
-        final String tokenValue = token;
+    public ArrayList<Integer> actualizeTasks(ArrayList<Integer> taskIds,
+                                             final String uid,
+                                             final String token){
         ArrayList<Integer> result = new ArrayList<>();
         JSONObject taskIdsBody = new JSONObject();
         JSONArray array = new JSONArray(taskIds);
@@ -83,8 +81,8 @@ public class OpenCorporaClient {
                             future){
                         protected Map<String, String> getParams() throws AuthFailureError {
                             Map<String, String> params = new HashMap<>();
-                            params.put("uid", uidValue);
-                            params.put("token", tokenValue);
+                            params.put("uid", uid);
+                            params.put("token", token);
                             return params;
                         }
                     };
@@ -92,9 +90,9 @@ public class OpenCorporaClient {
 
             JSONObject response = future.get(10, TimeUnit.SECONDS);
             Log.i(LOG_TAG, "Response received.");
-            JSONArray actuals = response.getJSONArray("items");
-            for(int i = 0; i < actuals.length(); ++i){
-                int id = actuals.getInt(i);
+            JSONArray actual = response.getJSONArray("items");
+            for(int i = 0; i < actual.length(); ++i){
+                int id = actual.getInt(i);
                 result.add(id);
             }
         } catch (JSONException | InterruptedException | TimeoutException | ExecutionException e) {
@@ -106,3 +104,4 @@ public class OpenCorporaClient {
         return result;
     }
 }
+

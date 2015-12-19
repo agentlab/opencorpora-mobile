@@ -29,16 +29,14 @@ class AuthHelper {
         mContext = context;
     }
 
-    public String singIn(String username, String password){
-        final String uid = username;
-        final String passwordValue = password;
+    public String singIn(final String username, final String password){
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
         JsonObjectRequest request =
                 new JsonObjectRequest(Request.Method.POST ,AUTH_URL, future, future){
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String, String> params = new HashMap<>();
-                        params.put("login", uid);
-                        params.put("token", passwordValue);
+                        params.put("login", username);
+                        params.put("token", password);
                         return params;
                     }
                 };
