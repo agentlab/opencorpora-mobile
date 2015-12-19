@@ -24,6 +24,7 @@ import java.util.concurrent.TimeoutException;
 public class OpenCorporaClient {
     private static final String LOG_TAG = "OpenCorporaClient";
     private static final String TYPES_URL = BuildConfig.server_address + "api/pool_types.php";
+    private static final String ACTUALIZE_URL = BuildConfig.server_address + "api/tasks.php";
 
     private OpenCorporaRequestQueue mQueue;
 
@@ -60,6 +61,47 @@ public class OpenCorporaClient {
         } catch (InterruptedException | ExecutionException | TimeoutException | JSONException e) {
             e.printStackTrace();
         }
+
+        return result;
+    }
+
+    // Returns only actual tasks
+    public ArrayList<Integer> actualizeTasks(ArrayList<Integer> taskIds, String uid, String token){
+        final String uidValue = uid;
+        final String tokenValue = token;
+        ArrayList<Integer> result = new ArrayList<>();
+        JSONObject taskIdsBody = new JSONObject();
+        JSONArray array = new JSONArray(taskIds);
+        try {
+            taskIdsBody.put("items", array);
+            RequestFuture<JSONObject> future = RequestFuture.newFuture();
+            JsonObjectRequest request =
+                    new JsonObjectRequest(Request.Method.POST ,
+                            ACTUALIZE_URL,
+                            taskIdsBody,
+                            future,
+                            future){
+                        protected Map<String, String> getParams() throws AuthFailureError {
+                            Map<String, String> params = new HashMap<>();
+                            params.put("uid", uidValue);
+                            params.put("token", tokenValue);
+                            return params;
+                        }
+                    };
+            mQueue.getRequestQueue().add(request);
+
+            JSONObject response = future.get(10, TimeUnit.SECONDS);
+            Log.i(LOG_TAG, "Response received.");
+            JSONArray actuals = response.getJSONArray("items");
+            for(int i = 0; i < actuals.length(); ++i){
+                int id = actuals.getInt(i);
+                result.add(id);
+            }
+        } catch (JSONException | InterruptedException | TimeoutException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        Log.i(LOG_TAG, "Task actual: " + result.size() + " / " + taskIds.size());
 
         return result;
     }

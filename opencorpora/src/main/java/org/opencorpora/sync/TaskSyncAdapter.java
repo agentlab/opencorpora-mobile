@@ -63,13 +63,12 @@ public class TaskSyncAdapter extends AbstractThreadedSyncAdapter {
 
         sendCompleted();
         ArrayList<Integer> tasksIds = mTasksHelper.getTaskIdsForActualize();
-        // ToDo: actualize tasksIds
-        tasksIds.clear();                                   // stub
-        ArrayList<Integer> old = new ArrayList<>(tasksIds); // stub
-        mTasksHelper.removeTasksByIds(old);
+        ArrayList<Integer> old = client.actualizeTasks(tasksIds, account.name, token);
+        tasksIds.removeAll(old);
+        mTasksHelper.removeTasksByIds(tasksIds);
 
         long diffTime = System.currentTimeMillis() - startTime;
-        Log.i(LOG_TAG, "Sync completed in " + diffTime);
+        Log.i(LOG_TAG, "Sync completed in " + diffTime + " ms.");
     }
 
     public void sendCompleted() {
