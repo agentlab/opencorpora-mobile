@@ -8,6 +8,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import org.opencorpora.data.TaskType;
+import org.opencorpora.data.api.OpenCorporaClient;
+
+import java.util.ArrayList;
+
 public class OpenCorporaActivity extends Activity {
     private TextView mTextView;
 
@@ -44,5 +49,10 @@ public class OpenCorporaActivity extends Activity {
         Account[] accounts =
                 AccountManager.get(this).getAccountsByType(InternalContract.ACCOUNT_TYPE);
         mTextView.setText("Found: " + accounts.length + " opencorpora accounts.");
+    }
+
+    public void loadTypes(View view){
+
+        mTextView.setText("Total types count = ");
     }
 }

@@ -14,6 +14,7 @@ import android.util.Log;
 import org.opencorpora.InternalContract;
 import org.opencorpora.data.SolvedTask;
 import org.opencorpora.data.TaskType;
+import org.opencorpora.data.api.OpenCorporaClient;
 import org.opencorpora.data.dal.TasksQueryHelper;
 import org.opencorpora.data.dal.TypesQueryHelper;
 
@@ -42,16 +43,22 @@ public class TaskSyncAdapter extends AbstractThreadedSyncAdapter {
                               SyncResult syncResult) {
         Log.i(LOG_TAG, "Start sync");
         long startTime = System.currentTimeMillis();
+        String token = null;
         try {
-            String token = AccountManager.get(mContext)
+            token = AccountManager.get(mContext)
                     .blockingGetAuthToken(account, InternalContract.AUTH_TOKEN_TYPE, false);
             Log.i(LOG_TAG, "Sync started for " + account.name + ". With token " + token);
         } catch (OperationCanceledException | IOException | AuthenticatorException e) {
             e.printStackTrace();
         }
 
-        // ToDo: send response for load available types
-        ArrayList<TaskType> types = new ArrayList<>(); // stub
+        if(token == null){
+            Log.w(LOG_TAG, "Sync failed. Unauthorized.");
+            return;
+        }
+
+        OpenCorporaClient client = new OpenCorporaClient(mContext);
+        ArrayList<TaskType> types = client.getTypes(account.name, token);
         mTypesHelper.updateTypes(types);
 
         sendCompleted();

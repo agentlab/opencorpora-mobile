@@ -11,4 +11,5 @@
     <string name="action_sign_in_short">Sign in</string>
     <string name="label">OpenCorpora</string>
     <string name="count_button_text">Count</string>
+    <string name="load_types_button_text">Load types</string>
 </resources>

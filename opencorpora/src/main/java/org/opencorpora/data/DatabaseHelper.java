@@ -46,7 +46,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TASK_TYPE_TABLE_CREATE = "CREATE TABLE " + TASK_TYPE_TABLE_NAME
             + "(" + TASK_TYPE_ID_COLUMN + " INTEGER PRIMARY KEY " + ", "
             + TASK_TYPE_NAME_COLUMN + " TEXT " + ", "
-            + TASK_TYPE_COMPLEXITY_COLUMN + "INTEGER" + ");";
+            + TASK_TYPE_COMPLEXITY_COLUMN + " INTEGER " + ");";
 
     private static final String TASK_TABLE_CREATE = "CREATE TABLE " + TASK_TABLE_NAME + "("
             + TASK_ID_COLUMN + " INTEGER PRIMARY KEY " + ", "
@@ -75,7 +75,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + COMPLETED_TASK_IS_LEFT_SHOWED_COLUMN + " BOOLEAN " + ", "
             + COMPLETED_TASK_IS_RIGHT_SHOWED_COLUMN + " BOOLEAN " + ", "
             + COMPLETED_TASK_IS_COMMENTED_COLUMN + " BOOLEAN " + ", "
-            + COMPLETED_TASK_COMMENT_COLUMN + "TEXT" + ", "
+            + COMPLETED_TASK_COMMENT_COLUMN + " TEXT " + ", "
             + "FOREIGN KEY(" + COMPLETED_TASK_TYPE_COLUMN + ") REFERENCES "
             + TASK_TYPE_TABLE_NAME + "(" + TASK_TYPE_ID_COLUMN + "));";
 
