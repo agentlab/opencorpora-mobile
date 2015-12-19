@@ -3,6 +3,7 @@ package org.opencorpora.data.api;
 import android.content.Context;
 import android.util.Log;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
@@ -14,6 +15,8 @@ import org.opencorpora.BuildConfig;
 import org.opencorpora.data.TaskType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -23,15 +26,24 @@ public class OpenCorporaClient {
     private static final String TYPES_URL = BuildConfig.server_address + "api/pool_types.php";
 
     private OpenCorporaRequestQueue mQueue;
-    private Context mContext;
+
     public OpenCorporaClient(Context context){
         mQueue = OpenCorporaRequestQueue.getInstance(context);
-        mContext = context;
     }
 
     public ArrayList<TaskType> getTypes(String uid, String token){
+        final String uidValue = uid;
+        final String tokenValue = token;
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET ,TYPES_URL, future, future);
+        JsonObjectRequest request =
+                new JsonObjectRequest(Request.Method.GET ,TYPES_URL, future, future){
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String, String> params = new HashMap<>();
+                        params.put("uid", uidValue);
+                        params.put("token", tokenValue);
+                        return params;
+                    }
+                };
         mQueue.getRequestQueue().add(request);
         ArrayList<TaskType> result = new ArrayList<>();
         try{
