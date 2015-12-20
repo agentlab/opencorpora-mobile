@@ -41,8 +41,10 @@ public class OpenCorporaActivity extends Activity {
         }
     }
 
-    public void openActivity(View view) {
+    public void openTypes(View view) {
         Intent intent = new Intent(this, TypesActivity.class);
         startActivity(intent);
     }
+
+
 }

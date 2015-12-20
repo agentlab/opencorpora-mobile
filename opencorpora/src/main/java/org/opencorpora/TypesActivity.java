@@ -3,6 +3,7 @@ package org.opencorpora;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,26 +20,46 @@ public class TypesActivity extends Activity {
     private static final String LOG_TAG = "TypesActivity";
 
     private ListView mListView;
+    private TypesQueryHelper mTypesHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_types);
-
+        mTypesHelper = new TypesQueryHelper(this);
         mListView = (ListView) findViewById(R.id.types_list_view);
 
-        TypesQueryHelper helper = new TypesQueryHelper(this);
-        HashMap<Integer, TaskType> types = helper.loadTypes();
+        LoadTypesTask loadTypesTask = new LoadTypesTask();
+        loadTypesTask.execute(this);
 
-        ArrayAdapter<TaskType> adapter = new ArrayAdapter<>(this, R.layout.list_item);
-        adapter.addAll(types.values());
-        mListView.setAdapter(adapter);
         final Context context = this;
         mListView.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(context, TasksActivity.class));
+                Intent intent = new Intent(context, TasksActivity.class);
+                TaskType selectedType = (TaskType) parent.getItemAtPosition(position);
+                intent.putExtra(TasksActivity.TYPE_ID_KEY, selectedType.getId());
+                intent.putExtra(TasksActivity.TYPE_NAME_KEY, selectedType.getName());
+                intent.putExtra(TasksActivity.TYPE_COMPLEXITY_KEY, selectedType.getComplexity());
+                startActivity(intent);
             }
         });
         Log.i(LOG_TAG, "Created");
+    }
+
+    private class LoadTypesTask extends AsyncTask<Context, Void, ArrayAdapter<TaskType>> {
+        @Override
+        protected ArrayAdapter<TaskType> doInBackground(Context... params) {
+            HashMap<Integer, TaskType> types = mTypesHelper.loadTypes();
+            Context context = params[0];
+            ArrayAdapter<TaskType> adapter = new ArrayAdapter<>(context, R.layout.list_item);
+            adapter.addAll(types.values());
+            return adapter;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayAdapter<TaskType> adapter) {
+            super.onPostExecute(adapter);
+            mListView.setAdapter(adapter);
+        }
     }
 }

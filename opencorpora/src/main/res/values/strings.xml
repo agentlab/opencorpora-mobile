@@ -13,4 +13,7 @@
     <string name="open_types_activity">Open types activity</string>
     <string name="title_activity_types_activity">Доступные типы задач</string>
     <string name="title_activity_tasks">TasksActivity</string>
+    <string name="previous_task_button">Previous</string>
+    <string name="next_task_button">Next</string>
+    <string name="login_button_text">Login</string>
 </resources>
