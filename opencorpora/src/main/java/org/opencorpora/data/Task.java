@@ -18,7 +18,7 @@ public class Task extends BaseTask {
                 String target,
                 String leftContext,
                 String rightContext,
-                boolean hasInstruction){
+                boolean hasInstruction) {
         super(id, type);
         mTarget = target;
         mLeftContext = leftContext;
@@ -39,31 +39,31 @@ public class Task extends BaseTask {
         return mRightContext;
     }
 
-    public boolean hasInstruction(){
+    public boolean hasInstruction() {
         return mHasInstruction;
     }
 
-    public String getChoiceByNumber(int choiceNum){
+    public String getChoiceByNumber(int choiceNum) {
         return mChoices.get(choiceNum);
     }
 
-    public HashMap<Integer, String> getChoices(){
+    public HashMap<Integer, String> getChoices() {
         return mChoices;
     }
 
-    public void setLeftContext(String value){
+    public void setLeftContext(String value) {
         mLeftContext = value;
     }
 
-    public void setRightContext(String value){
+    public void setRightContext(String value) {
         mRightContext = value;
     }
 
-    public void setHasInstruction(boolean value){
+    public void setHasInstruction(boolean value) {
         mHasInstruction = value;
     }
 
-    public void setChoiceByNumber(int number, String value){
+    public void setChoiceByNumber(int number, String value) {
         mChoices.put(number, value);
     }
 

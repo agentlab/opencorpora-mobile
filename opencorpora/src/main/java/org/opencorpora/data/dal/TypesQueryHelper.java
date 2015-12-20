@@ -22,7 +22,7 @@ public class TypesQueryHelper {
     private static final String LOG_TAG = "TypesQueryHelper";
     private static DatabaseHelper mDbHelper;
 
-    public TypesQueryHelper(Context context){
+    public TypesQueryHelper(Context context) {
         mDbHelper = new DatabaseHelper(context);
     }
 
@@ -33,7 +33,7 @@ public class TypesQueryHelper {
         /* We can not bulk insert with SQLiteDatabase object.*/
         long startTime = System.currentTimeMillis();
         db.beginTransaction();
-        for(TaskType type : types){
+        for(TaskType type : types) {
             values.clear();
             values.put(TASK_TYPE_ID_COLUMN, type.getId());
             values.put(TASK_TYPE_NAME_COLUMN, type.getName());
@@ -49,19 +49,19 @@ public class TypesQueryHelper {
                 + ". Time(ms): " + timeDiff);
     }
 
-    public HashMap<Integer, TaskType> loadTypes(){
+    public HashMap<Integer, TaskType> loadTypes() {
         HashMap<Integer, TaskType> result = new HashMap<>();
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         long startTime = System.currentTimeMillis();
         Cursor cursor = db.query(TASK_TYPE_TABLE_NAME,
-                new String[]{
+                new String[] {
                         TASK_TYPE_ID_COLUMN,
                         TASK_TYPE_NAME_COLUMN,
                         TASK_TYPE_COMPLEXITY_COLUMN
                 }, null, null, null, null, null);
         cursor.moveToFirst();
-        while(!cursor.isAfterLast()){
+        while(!cursor.isAfterLast()) {
             Bundle record = cursor.getExtras();
             int id = record.getInt(TASK_TYPE_ID_COLUMN);
             String name = record.getString(TASK_TYPE_NAME_COLUMN);

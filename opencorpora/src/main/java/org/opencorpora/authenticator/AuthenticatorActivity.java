@@ -23,7 +23,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         mServerAuthenticate = new AuthHelper();
     }
 
-    public void onClick(View view){
+    public void onClick(View view) {
         submit();
     }
 

@@ -66,15 +66,15 @@ public class Authenticator extends AbstractAccountAuthenticator {
 
         String authToken = manager.peekAuthToken(account, authTokenType);
 
-        if(TextUtils.isEmpty(authToken)){
+        if(TextUtils.isEmpty(authToken)) {
             final String password = manager.getPassword(account);
 
-            if(password != null){
+            if(password != null) {
                 authToken = mAuthService.signIn(account.name, password);
             }
         }
 
-        if(!TextUtils.isEmpty(authToken)){
+        if(!TextUtils.isEmpty(authToken)) {
             final Bundle result = new Bundle();
             result.putString(InternalContract.KEY_ACCOUNT_NAME, account.name);
             result.putString(InternalContract.KEY_ACCOUNT_TYPE, account.type);

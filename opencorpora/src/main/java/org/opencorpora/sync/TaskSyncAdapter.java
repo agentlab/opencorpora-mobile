@@ -75,7 +75,7 @@ public class TaskSyncAdapter extends AbstractThreadedSyncAdapter {
             success = true;
         }
 
-        if(success){
+        if(success) {
             mTasksHelper.deleteCompletedTasks(tasksForSend);
         }
 

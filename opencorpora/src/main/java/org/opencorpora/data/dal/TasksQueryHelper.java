@@ -38,17 +38,17 @@ public class TasksQueryHelper {
 
     private DatabaseHelper mDbHelper;
 
-    public TasksQueryHelper(Context context){
+    public TasksQueryHelper(Context context) {
         mDbHelper = new DatabaseHelper(context);
     }
 
-    public ArrayList<SolvedTask> getReadyTasks(){
+    public ArrayList<SolvedTask> getReadyTasks() {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
         long startTime = System.currentTimeMillis();
         Cursor cursor = db.rawQuery(SQL_GET_ALL_COMPLETED_TASKS, null);
         ArrayList<SolvedTask> result = new ArrayList<>();
         cursor.moveToFirst();
-        while (!cursor.isAfterLast()){
+        while (!cursor.isAfterLast()) {
             Bundle record = cursor.getExtras();
 
             TaskType type = new TaskType(
@@ -83,11 +83,11 @@ public class TasksQueryHelper {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
         long startTime = System.currentTimeMillis();
         Cursor cursor = db.query(TASK_TABLE_NAME,
-                new String[]{TASK_ID_COLUMN},
+                new String[] { TASK_ID_COLUMN },
                 null, null, null, null, null);
         ArrayList<Integer> taskForActualize = new ArrayList<>();
         cursor.moveToFirst();
-        while(!cursor.isAfterLast()){
+        while(!cursor.isAfterLast()) {
             Bundle record = cursor.getExtras();
             taskForActualize.add(record.getInt(TASK_ID_COLUMN));
             cursor.moveToNext();
@@ -100,14 +100,14 @@ public class TasksQueryHelper {
         return taskForActualize;
     }
 
-    public void removeTasksByIds(ArrayList<Integer> tasks){
+    public void removeTasksByIds(ArrayList<Integer> tasks) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         long startTime = System.currentTimeMillis();
         db.beginTransaction();
-        for (Integer taskId : tasks){
+        for (Integer taskId : tasks) {
             db.delete(TASK_TABLE_NAME,
                     TASK_TABLE_NAME + "." + TASK_ID_COLUMN + "=" + "?",
-                    new String[]{ taskId.toString() });
+                    new String[] { taskId.toString() });
         }
         db.endTransaction();
 
@@ -116,7 +116,7 @@ public class TasksQueryHelper {
                 + tasks.size() + ". Time(ms): " + diffTime);
     }
 
-    public void saveTasks(ArrayList<Task> tasks){
+    public void saveTasks(ArrayList<Task> tasks) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         long startTime = System.currentTimeMillis();
 
@@ -155,7 +155,7 @@ public class TasksQueryHelper {
             String whereClause = COMPLETED_TASK_ID_COLUMN + " = ? ";
             Integer id = task.getId();
 
-            db.delete(COMPLETED_TASK_TABLE_NAME, whereClause, new String[]{id.toString()});
+            db.delete(COMPLETED_TASK_TABLE_NAME, whereClause, new String[] { id.toString() });
 
             Log.i(LOG_TAG, "Task " + id + " deleted.");
         }
@@ -164,12 +164,12 @@ public class TasksQueryHelper {
         Log.d(LOG_TAG, "Complete tasks deletion. Count: " + tasks.size() + ". Time(ms):" + diffTime);
     }
 
-    public ArrayList<Task> getTasksByType(TaskType type){
+    public ArrayList<Task> getTasksByType(TaskType type) {
         ArrayList<Task> result = new ArrayList<>();
         long startTime = System.currentTimeMillis();
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
         Cursor cursor = db.query(TASK_TABLE_NAME,
-                new String[]{
+                new String[] {
                         TASK_ID_COLUMN,
                         TASK_TARGET_COLUMN,
                         TASK_LEFT_CONTEXT_COLUMN,
@@ -177,7 +177,7 @@ public class TasksQueryHelper {
                         TASK_HAS_INSTRUCTION_COLUMN
                 },
                 TASK_TYPE_COLUMN + " = " + "?",
-                new String[]{
+                new String[] {
                         Integer.toString(type.getId())
                 },
                 null,
@@ -185,7 +185,7 @@ public class TasksQueryHelper {
                 null);
 
         cursor.moveToFirst();
-        while(!cursor.isAfterLast()){
+        while(!cursor.isAfterLast()) {
             Bundle record = cursor.getExtras();
             int id = record.getInt(TASK_ID_COLUMN);
             String target = record.getString(TASK_TARGET_COLUMN);

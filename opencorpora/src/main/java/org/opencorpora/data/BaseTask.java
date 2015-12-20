@@ -4,16 +4,16 @@ public class BaseTask {
     private int mId;
     private TaskType mType;
 
-    BaseTask(int id, TaskType type){
+    BaseTask(int id, TaskType type) {
         mId = id;
         mType = type;
     }
 
-    public int getId(){
+    public int getId() {
         return mId;
     }
 
-    public TaskType getType(){
+    public TaskType getType() {
         return mType;
     }
 }
