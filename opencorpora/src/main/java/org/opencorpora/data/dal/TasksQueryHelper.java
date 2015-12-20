@@ -126,6 +126,7 @@ public class TasksQueryHelper {
                     TASK_TABLE_NAME + "." + TASK_ID_COLUMN + "=" + "?",
                     new String[] { taskId.toString() });
         }
+        db.setTransactionSuccessful();
         db.endTransaction();
 
         long diffTime = System.currentTimeMillis() - startTime;
@@ -137,6 +138,7 @@ public class TasksQueryHelper {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         long startTime = System.currentTimeMillis();
 
+        db.beginTransaction();
         for (Task task : tasks) {
             ContentValues values = new ContentValues();
             values.put(TASK_ID_COLUMN, task.getId());
@@ -159,6 +161,9 @@ public class TasksQueryHelper {
             Log.d(LOG_TAG, "Task " + task.getId() + " successfully saved");
         }
 
+        db.setTransactionSuccessful();
+        db.endTransaction();
+
         long diffTime = System.currentTimeMillis() - startTime;
         Log.d(LOG_TAG, "Saving complete. Count: " + tasks.size() + ". Time(ms): " + diffTime);
     }
@@ -176,7 +181,10 @@ public class TasksQueryHelper {
 
             Log.i(LOG_TAG, "Task " + id + " deleted.");
         }
+
+        db.setTransactionSuccessful();
         db.endTransaction();
+
         long diffTime = System.currentTimeMillis() - startTime;
         Log.d(LOG_TAG,
                 "Complete tasks deletion. Count: " + tasks.size() + ". Time(ms):" + diffTime);

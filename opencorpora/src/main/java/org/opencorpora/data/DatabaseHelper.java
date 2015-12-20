@@ -85,10 +85,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        db.beginTransaction();
+
         db.execSQL(TASK_TYPE_TABLE_CREATE);
         db.execSQL(TASK_TABLE_CREATE);
         db.execSQL(CHOICE_TABLE_CREATE);
         db.execSQL(COMPLETED_TASK_TABLE_CREATE);
+
+        db.setTransactionSuccessful();
+        db.endTransaction();
     }
 
     @Override

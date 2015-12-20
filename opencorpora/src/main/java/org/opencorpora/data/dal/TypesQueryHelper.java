@@ -40,6 +40,8 @@ public class TypesQueryHelper {
             db.insertWithOnConflict(TASK_TYPE_TABLE_NAME,
                     null, values, SQLiteDatabase.CONFLICT_REPLACE);
         }
+
+        db.setTransactionSuccessful();
         db.endTransaction();
 
 
