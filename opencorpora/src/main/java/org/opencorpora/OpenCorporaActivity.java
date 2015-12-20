@@ -45,9 +45,4 @@ public class OpenCorporaActivity extends Activity {
                 AccountManager.get(this).getAccountsByType(InternalContract.ACCOUNT_TYPE);
         mTextView.setText("Found: " + accounts.length + " opencorpora accounts.");
     }
-
-    public void loadTypes(View view) {
-
-        mTextView.setText("Total types count = ");
-    }
 }

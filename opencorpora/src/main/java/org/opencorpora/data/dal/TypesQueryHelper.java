@@ -42,7 +42,7 @@ public class TypesQueryHelper {
             values.put(TASK_TYPE_NAME_COLUMN, type.getName());
             values.put(TASK_TYPE_COMPLEXITY_COLUMN, type.getComplexity());
             db.insertWithOnConflict(TASK_TYPE_TABLE_NAME,
-                    TASK_TYPE_ID_COLUMN, values, SQLiteDatabase.CONFLICT_REPLACE);
+                    null, values, SQLiteDatabase.CONFLICT_REPLACE);
         }
 
         db.setTransactionSuccessful();
