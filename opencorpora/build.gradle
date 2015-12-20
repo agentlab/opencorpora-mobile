@@ -43,7 +43,6 @@ repositories {
 
 dependencies {
     compile 'com.loopj.android:android-async-http:1.4.9'
-    compile 'org.jetbrains:annotations:13.0'
 }
 
 task wrapper(type: Wrapper) {
