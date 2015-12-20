@@ -11,14 +11,11 @@
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.READ_SYNC_STATS" />
@@ -65,14 +62,24 @@
         <service
             android:name=".sync.TaskService"
             android:exported="true"
-            android:permission="android.permission.ACCOUNT_MANAGER">
+            android:permission="android.permission.ACCOUNT_MANAGER" >
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
+
             <meta-data
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/sync_adapter" />
         </service>
+
+        <activity
+            android:name=".TypesActivity"
+            android:label="@string/title_activity_types_activity" >
+        </activity>
+        <activity
+            android:name=".TasksActivity"
+            android:label="@string/title_activity_tasks" >
+        </activity>
     </application>
 
 </manifest>

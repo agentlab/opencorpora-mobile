@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -40,9 +41,8 @@ public class OpenCorporaActivity extends Activity {
         }
     }
 
-    public void tryAuth(View view) {
-        Account[] accounts =
-                AccountManager.get(this).getAccountsByType(InternalContract.ACCOUNT_TYPE);
-        mTextView.setText("Found: " + accounts.length + " opencorpora accounts.");
+    public void openActivity(View view) {
+        Intent intent = new Intent(this, TypesActivity.class);
+        startActivity(intent);
     }
 }
