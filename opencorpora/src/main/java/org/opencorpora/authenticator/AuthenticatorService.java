@@ -6,7 +6,6 @@ import android.os.IBinder;
 
 import org.opencorpora.authenticator.Authenticator;
 
-
 public class AuthenticatorService extends Service {
     @Override
     public IBinder onBind(Intent intent) {

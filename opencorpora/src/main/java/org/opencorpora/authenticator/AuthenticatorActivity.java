@@ -12,7 +12,6 @@ import android.widget.TextView;
 import org.opencorpora.InternalContract;
 import org.opencorpora.R;
 
-
 public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     private AuthHelper mServerAuthenticate;
     private AccountManager mAccountManager;
@@ -24,7 +23,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         mServerAuthenticate = new AuthHelper();
     }
 
-    public void onClick(View view){
+    public void onClick(View view) {
         submit();
     }
 

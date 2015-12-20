@@ -11,14 +11,27 @@ import android.content.SyncResult;
 import android.os.Bundle;
 import android.util.Log;
 
+import org.opencorpora.InternalContract;
+import org.opencorpora.data.SolvedTask;
+import org.opencorpora.data.TaskType;
+import org.opencorpora.data.dal.TasksQueryHelper;
+import org.opencorpora.data.dal.TypesQueryHelper;
+
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class TaskSyncAdapter extends AbstractThreadedSyncAdapter {
     private static final String LOG_TAG = "TaskSyncAdapter";
+
     private Context mContext;
+    private TasksQueryHelper mTasksHelper;
+    private TypesQueryHelper mTypesHelper;
+
     public TaskSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
         mContext = context;
+        mTasksHelper = new TasksQueryHelper(context);
+        mTypesHelper = new TypesQueryHelper(context);
     }
 
     @Override
@@ -28,16 +41,44 @@ public class TaskSyncAdapter extends AbstractThreadedSyncAdapter {
                               ContentProviderClient provider,
                               SyncResult syncResult) {
         Log.i(LOG_TAG, "Start sync");
-
+        long startTime = System.currentTimeMillis();
         try {
             String token = AccountManager.get(mContext)
-                    .blockingGetAuthToken(account, "login_pass_auth", false);
+                    .blockingGetAuthToken(account, InternalContract.AUTH_TOKEN_TYPE, false);
             Log.i(LOG_TAG, "Sync started for " + account.name + ". With token " + token);
         } catch (OperationCanceledException | IOException | AuthenticatorException e) {
             e.printStackTrace();
         }
-        // ToDo: sync all
 
-        Log.i(LOG_TAG, "Sync is completed");
+        // ToDo: send response for load available types
+        ArrayList<TaskType> types = new ArrayList<>(); // stub
+        mTypesHelper.updateTypes(types);
+
+        sendCompleted();
+        ArrayList<Integer> tasksIds = mTasksHelper.getTaskIdsForActualize();
+        // ToDo: actualize tasksIds
+        tasksIds.clear();                                   // stub
+        ArrayList<Integer> old = new ArrayList<>(tasksIds); // stub
+        mTasksHelper.removeTasksByIds(old);
+
+        long diffTime = System.currentTimeMillis() - startTime;
+        Log.i(LOG_TAG, "Sync completed in " + diffTime);
+    }
+
+    public void sendCompleted() {
+        ArrayList<SolvedTask> tasksForSend = mTasksHelper.getReadyTasks();
+        boolean success = false;
+        for (SolvedTask task : tasksForSend) {
+            Log.d(LOG_TAG, "Send task with id:" + task.getId());
+            // ToDo: implement logic for sending tasks to server
+            // Logic for send task to server
+            success = true;
+        }
+
+        if(success) {
+            mTasksHelper.deleteCompletedTasks(tasksForSend);
+        }
+
+        Log.d(LOG_TAG, "Send ready tasks completed.");
     }
 }

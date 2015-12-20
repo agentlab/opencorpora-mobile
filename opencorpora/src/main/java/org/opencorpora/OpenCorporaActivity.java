@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-
 public class OpenCorporaActivity extends Activity {
     private TextView mTextView;
 
@@ -24,10 +23,10 @@ public class OpenCorporaActivity extends Activity {
         super.onStart();
     }
 
-    public void onClick(View view){
+    public void onClick(View view) {
         Account[] accounts
                 = AccountManager.get(this).getAccountsByType(InternalContract.ACCOUNT_TYPE);
-        if(accounts.length > 0){
+        if(accounts.length > 0) {
             Bundle bundle = new Bundle();
             bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
             bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
@@ -36,12 +35,12 @@ public class OpenCorporaActivity extends Activity {
                     bundle);
             mTextView.setText("Sync is active? = " + ContentResolver.getSyncAdapterTypes().length);
         }
-        else{
+        else {
             mTextView.setText("Sync types count = " + ContentResolver.getSyncAdapterTypes().length);
         }
     }
 
-    public void tryAuth(View view){
+    public void tryAuth(View view) {
         Account[] accounts =
                 AccountManager.get(this).getAccountsByType(InternalContract.ACCOUNT_TYPE);
         mTextView.setText("Found: " + accounts.length + " opencorpora accounts.");

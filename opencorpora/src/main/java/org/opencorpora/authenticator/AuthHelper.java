@@ -12,9 +12,8 @@ import org.opencorpora.BuildConfig;
 
 import cz.msebera.android.httpclient.Header;
 
-
 class AuthHelper {
-    final private String LOG_TAG = "AuthHelper";
+    private static final String LOG_TAG = "AuthHelper";
 
     private String mResult;
 

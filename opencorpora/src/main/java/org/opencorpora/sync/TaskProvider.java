@@ -4,14 +4,12 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
-import android.util.Log;
 
+/**
+ * Stub class only for data sync
+ * @see <a href="http://developer.android.com/intl/ru/training/sync-adapters/creating-stub-provider.html" >
+ */
 public class TaskProvider extends ContentProvider {
-    private static final String LOG_TAG = "TaskProvider";
-    public TaskProvider() {
-        Log.d(LOG_TAG, "TaskProviderCreated");
-    }
-
     @Override
     public boolean onCreate() {
         return false;
@@ -42,7 +40,10 @@ public class TaskProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+    public int update(Uri uri,
+                      ContentValues values,
+                      String selection,
+                      String[] selectionArgs) {
         return 0;
     }
 
