@@ -13,6 +13,7 @@ import android.util.Log;
 
 import org.opencorpora.InternalContract;
 import org.opencorpora.data.SolvedTask;
+import org.opencorpora.data.Task;
 import org.opencorpora.data.TaskType;
 import org.opencorpora.data.api.OpenCorporaClient;
 import org.opencorpora.data.dal.TasksQueryHelper;
@@ -20,6 +21,7 @@ import org.opencorpora.data.dal.TypesQueryHelper;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class TaskSyncAdapter extends AbstractThreadedSyncAdapter {
     private static final String LOG_TAG = "TaskSyncAdapter";
@@ -57,6 +59,9 @@ public class TaskSyncAdapter extends AbstractThreadedSyncAdapter {
             return;
         }
 
+        HashMap<Integer, TaskType> oldTypes = mTypesHelper.loadTypes();
+        Log.i(LOG_TAG, "Old types count = " + oldTypes.size() + ".");
+
         OpenCorporaClient client = new OpenCorporaClient(mContext);
         ArrayList<TaskType> types = client.getTypes(account.name, token);
         mTypesHelper.updateTypes(types);
@@ -66,9 +71,17 @@ public class TaskSyncAdapter extends AbstractThreadedSyncAdapter {
         tasksIds.removeAll(old);
         mTasksHelper.removeTasksByIds(tasksIds);
 
-        client.getTasksByType(account.name, token, types.get(0));
+        ArrayList<Task> tasks = client.getTasksByType(account.name, token, types.get(0));
+        mTasksHelper.saveTasks(tasks);
 
         ArrayList<SolvedTask> readyTasks = mTasksHelper.getReadyTasks();
+        SolvedTask ready = new SolvedTask(1, oldTypes.get(0));
+        ready.setComment("comment");
+        ready.setIsCommented(true);
+        ready.setIsRightContextShowed(true);
+        ready.setAnswer(1);
+        ready.setSecondsBeforeAnswer(10);
+        readyTasks.add(ready);
         boolean success = client.putReadyTasks(account.name, token, readyTasks);
 
         if(success) {

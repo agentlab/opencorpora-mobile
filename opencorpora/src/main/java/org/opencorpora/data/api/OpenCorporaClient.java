@@ -178,6 +178,7 @@ public class OpenCorporaClient {
                 json.put("comment_text", task.getComment());
                 tasksArray.put(json);
             }
+            tasksJSON.put("items", tasksArray);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -188,6 +189,7 @@ public class OpenCorporaClient {
                         tasksJSON,
                         future,
                         future){
+                    @Override
                     protected Map<String, String> getParams() {
                         Map<String, String> params = new HashMap<>();
                         params.put("uid", uid);
@@ -198,6 +200,7 @@ public class OpenCorporaClient {
         mQueue.getRequestQueue().add(request);
 
         boolean success = false;
+
         try {
             JSONObject response = future.get(10, TimeUnit.SECONDS);
             if(response.has("error")){
