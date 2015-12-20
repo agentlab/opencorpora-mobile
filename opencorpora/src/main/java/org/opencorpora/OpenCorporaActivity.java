@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import org.opencorpora.authenticator.AuthenticatorActivity;
+
 public class OpenCorporaActivity extends Activity {
     private TextView mTextView;
 
@@ -46,5 +48,7 @@ public class OpenCorporaActivity extends Activity {
         startActivity(intent);
     }
 
-
+    public void onLogin(View view) {
+        startActivity(new Intent(this, AuthenticatorActivity.class));
+    }
 }

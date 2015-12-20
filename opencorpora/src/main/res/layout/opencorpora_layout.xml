@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    tools:context="org.opencorpora.OpenCorporaActivity">
 
     <TextView
         android:id="@+id/text_view"
@@ -21,10 +23,9 @@
         android:text="@string/open_types_activity"
         android:onClick="openTypes"/>
 
-
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/login_button_text"
-        android:onClick=""/>
+        android:onClick="onLogin"/>
 </LinearLayout>

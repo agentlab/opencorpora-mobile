@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:text="@string/previous_task_button"
         android:id="@+id/prev_button"
+        style="@android:style/Theme.Holo"
         android:layout_gravity="bottom" />
 
     <Button
@@ -19,5 +20,6 @@
         android:layout_height="wrap_content"
         android:text="@string/next_task_button"
         android:id="@+id/next_button"
+        style="@android:style/Theme.Holo"
         android:layout_gravity="bottom" />
 </LinearLayout>
