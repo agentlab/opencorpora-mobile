@@ -33,8 +33,7 @@ public class TypesQueryHelper {
         /* We can not bulk insert with SQLiteDatabase object.*/
         long startTime = System.currentTimeMillis();
         db.beginTransaction();
-        for(TaskType type
-                : types){
+        for(TaskType type : types){
             values.clear();
             values.put(TASK_TYPE_ID_COLUMN, type.getId());
             values.put(TASK_TYPE_NAME_COLUMN, type.getName());
@@ -43,6 +42,7 @@ public class TypesQueryHelper {
                     null, values, SQLiteDatabase.CONFLICT_REPLACE);
         }
         db.endTransaction();
+
 
         long timeDiff = System.currentTimeMillis() - startTime;
         Log.i(LOG_TAG, "Types save completed. Count: " + types.size()

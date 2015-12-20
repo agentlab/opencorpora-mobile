@@ -68,8 +68,7 @@ public class TaskSyncAdapter extends AbstractThreadedSyncAdapter {
     public void sendCompleted() {
         ArrayList<SolvedTask> tasksForSend = mTasksHelper.getReadyTasks();
         boolean success = false;
-        for (SolvedTask task:
-                tasksForSend) {
+        for (SolvedTask task : tasksForSend) {
             Log.d(LOG_TAG, "Send task with id:" + task.getId());
             // ToDo: implement logic for sending tasks to server
             // Logic for send task to server

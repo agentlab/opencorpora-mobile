@@ -104,8 +104,7 @@ public class TasksQueryHelper {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         long startTime = System.currentTimeMillis();
         db.beginTransaction();
-        for (Integer taskId
-                : tasks){
+        for (Integer taskId : tasks){
             db.delete(TASK_TABLE_NAME,
                     TASK_TABLE_NAME + "." + TASK_ID_COLUMN + "=" + "?",
                     new String[]{ taskId.toString() });
@@ -121,8 +120,7 @@ public class TasksQueryHelper {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         long startTime = System.currentTimeMillis();
 
-        for (Task task :
-                tasks) {
+        for (Task task : tasks) {
             ContentValues values = new ContentValues();
             values.put(TASK_ID_COLUMN, task.getId());
             values.put(TASK_TYPE_COLUMN, task.getType().getId());
@@ -133,8 +131,7 @@ public class TasksQueryHelper {
             db.insert(TASK_TABLE_NAME, null, values);
 
             HashMap<Integer, String> choices = task.getChoices();
-            for (Map.Entry<Integer, String> choice:
-                    choices.entrySet()) {
+            for (Map.Entry<Integer, String> choice : choices.entrySet()) {
                 ContentValues choiceValues = new ContentValues();
                 choiceValues.put(CHOICE_TASK_ID_COLUMN, task.getId());
                 choiceValues.put(CHOICE_ANSWER_NUM_COLUMN, choice.getKey());
@@ -154,8 +151,7 @@ public class TasksQueryHelper {
         long startTime = System.currentTimeMillis();
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         db.beginTransaction();
-        for (SolvedTask task:
-                tasks) {
+        for (SolvedTask task : tasks) {
             String whereClause = COMPLETED_TASK_ID_COLUMN + " = ? ";
             Integer id = task.getId();
 
