@@ -4,12 +4,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Bundle;
 import android.util.Log;
 
+import org.opencorpora.data.DatabaseHelper;
 import org.opencorpora.data.SolvedTask;
 import org.opencorpora.data.Task;
-import org.opencorpora.data.DatabaseHelper;
 import org.opencorpora.data.TaskType;
 
 import java.util.ArrayList;
@@ -18,23 +17,24 @@ import java.util.Map;
 
 import static org.opencorpora.data.DatabaseHelper.*;
 
+
 public class TasksQueryHelper {
     private static String LOG_TAG = "TasksQueryHelper";
     private static final String SQL_GET_ALL_COMPLETED_TASKS = "SELECT "
-            + COMPLETED_TASK_ID_COLUMN + ", "
-            + COMPLETED_TASK_TYPE_COLUMN + ", "
-            + COMPLETED_TASK_ANSWER_COLUMN + ", "
-            + COMPLETED_TASK_SECONDS_COLUMN + ", "
-            + COMPLETED_TASK_IS_LEFT_SHOWED_COLUMN + ", "
-            + COMPLETED_TASK_IS_RIGHT_SHOWED_COLUMN + ", "
-            + COMPLETED_TASK_IS_COMMENTED_COLUMN + ", "
-            + COMPLETED_TASK_COMMENT_COLUMN + ", "
-            + TASK_TYPE_NAME_COLUMN + ", "
-            + TASK_TYPE_COMPLEXITY_COLUMN + " "
+            + COMPLETED_TASK_TABLE_NAME + "." + COMPLETED_TASK_ID_COLUMN + ", "
+            + COMPLETED_TASK_TABLE_NAME + "." + COMPLETED_TASK_TYPE_COLUMN + ", "
+            + COMPLETED_TASK_TABLE_NAME + "." + COMPLETED_TASK_ANSWER_COLUMN + ", "
+            + COMPLETED_TASK_TABLE_NAME + "." + COMPLETED_TASK_SECONDS_COLUMN + ", "
+            + COMPLETED_TASK_TABLE_NAME + "." + COMPLETED_TASK_IS_LEFT_SHOWED_COLUMN + ", "
+            + COMPLETED_TASK_TABLE_NAME + "." + COMPLETED_TASK_IS_RIGHT_SHOWED_COLUMN + ", "
+            + COMPLETED_TASK_TABLE_NAME + "." + COMPLETED_TASK_IS_COMMENTED_COLUMN + ", "
+            + COMPLETED_TASK_TABLE_NAME + "." + COMPLETED_TASK_COMMENT_COLUMN + ", "
+            + TASK_TYPE_TABLE_NAME + "." + TASK_TYPE_NAME_COLUMN + ", "
+            + TASK_TYPE_TABLE_NAME + "." + TASK_TYPE_COMPLEXITY_COLUMN + " "
             + " FROM " + COMPLETED_TASK_TABLE_NAME
             + " JOIN " + TASK_TYPE_TABLE_NAME + " ON "
-            + TASK_TYPE_ID_COLUMN + " = "
-            + COMPLETED_TASK_TYPE_COLUMN;
+            + TASK_TYPE_TABLE_NAME + "." + TASK_TYPE_ID_COLUMN + " = "
+            + COMPLETED_TASK_TABLE_NAME + "." + COMPLETED_TASK_TYPE_COLUMN;
 
     private DatabaseHelper mDbHelper;
 
@@ -47,31 +47,44 @@ public class TasksQueryHelper {
         long startTime = System.currentTimeMillis();
         Cursor cursor = db.rawQuery(SQL_GET_ALL_COMPLETED_TASKS, null);
         ArrayList<SolvedTask> result = new ArrayList<>();
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            Bundle record = cursor.getExtras();
 
-            TaskType type = new TaskType(
-                    record.getInt(COMPLETED_TASK_TYPE_COLUMN),
-                    record.getString(TASK_TYPE_NAME_COLUMN),
-                    record.getInt(TASK_TYPE_COMPLEXITY_COLUMN));
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
+                    int type_id = cursor.getInt(cursor.getColumnIndex(COMPLETED_TASK_TYPE_COLUMN));
+                    String type_name = cursor.getString(
+                            cursor.getColumnIndex(TASK_TYPE_NAME_COLUMN));
+                    int type_complexity = cursor.getInt(
+                            cursor.getColumnIndex(TASK_TYPE_COMPLEXITY_COLUMN));
+                    TaskType type = new TaskType(type_id, type_name, type_complexity);
 
-            SolvedTask task = new SolvedTask(record
-                    .getInt(COMPLETED_TASK_ID_COLUMN), type);
+                    int id = cursor.getInt(cursor.getColumnIndex(COMPLETED_TASK_ID_COLUMN));
+                    SolvedTask task = new SolvedTask(id, type);
 
-            task.setAnswer(record.getInt(COMPLETED_TASK_ANSWER_COLUMN));
-            task.setSecondsBeforeAnswer(record.getInt(COMPLETED_TASK_SECONDS_COLUMN));
-            task.setIsLeftContextShowed(record.getBoolean(COMPLETED_TASK_IS_LEFT_SHOWED_COLUMN));
-            task.setIsRightContextShowed(record.getBoolean(COMPLETED_TASK_IS_RIGHT_SHOWED_COLUMN));
-            task.setIsCommented(record.getBoolean(COMPLETED_TASK_IS_COMMENTED_COLUMN));
-            task.setComment(record.getString(COMPLETED_TASK_SECONDS_COLUMN));
+                    task.setAnswer(cursor.getInt(
+                            cursor.getColumnIndex(COMPLETED_TASK_ANSWER_COLUMN)));
 
-            result.add(task);
+                    task.setSecondsBeforeAnswer(cursor.getInt(
+                            cursor.getColumnIndex(COMPLETED_TASK_SECONDS_COLUMN)));
 
-            cursor.moveToNext();
+                    task.setIsLeftContextShowed(cursor.getInt(
+                            cursor.getColumnIndex(COMPLETED_TASK_IS_LEFT_SHOWED_COLUMN)) > 0);
+
+                    task.setIsRightContextShowed(cursor.getInt(
+                            cursor.getColumnIndex(COMPLETED_TASK_IS_RIGHT_SHOWED_COLUMN)) > 0);
+
+                    task.setIsCommented(cursor.getInt(
+                            cursor.getColumnIndex(COMPLETED_TASK_IS_COMMENTED_COLUMN)) > 0);
+
+                    task.setComment(cursor.getString(
+                            cursor.getColumnIndex(COMPLETED_TASK_SECONDS_COLUMN)));
+
+                    result.add(task);
+                } while(cursor.moveToNext());
+            }
+
+            cursor.close();
         }
-
-        cursor.close();
 
         long diffTime = System.currentTimeMillis() - startTime;
         Log.d(LOG_TAG, "Tasks fetched: " + result.size() + ". Time(ms):" + diffTime);
@@ -86,14 +99,18 @@ public class TasksQueryHelper {
                 new String[] { TASK_ID_COLUMN },
                 null, null, null, null, null);
         ArrayList<Integer> taskForActualize = new ArrayList<>();
-        cursor.moveToFirst();
-        while(!cursor.isAfterLast()) {
-            Bundle record = cursor.getExtras();
-            taskForActualize.add(record.getInt(TASK_ID_COLUMN));
-            cursor.moveToNext();
+
+        if(cursor != null) {
+            if(cursor.moveToFirst()) {
+                do {
+                    int id = cursor.getInt(cursor.getColumnIndex(TASK_ID_COLUMN));
+                    taskForActualize.add(id);
+                } while(cursor.moveToNext());
+            }
+
+            cursor.close();
         }
 
-        cursor.close();
         long diffTime = System.currentTimeMillis() - startTime;
         Log.i(LOG_TAG, "Getting ids for actualize completed. Count: "
                 + taskForActualize.size() + ". Time(ms): " + diffTime);
@@ -161,7 +178,8 @@ public class TasksQueryHelper {
         }
         db.endTransaction();
         long diffTime = System.currentTimeMillis() - startTime;
-        Log.d(LOG_TAG, "Complete tasks deletion. Count: " + tasks.size() + ". Time(ms):" + diffTime);
+        Log.d(LOG_TAG,
+                "Complete tasks deletion. Count: " + tasks.size() + ". Time(ms):" + diffTime);
     }
 
     public ArrayList<Task> getTasksByType(TaskType type) {
@@ -184,18 +202,25 @@ public class TasksQueryHelper {
                 null,
                 null);
 
-        cursor.moveToFirst();
-        while(!cursor.isAfterLast()) {
-            Bundle record = cursor.getExtras();
-            int id = record.getInt(TASK_ID_COLUMN);
-            String target = record.getString(TASK_TARGET_COLUMN);
-            String leftContext = record.getString(TASK_LEFT_CONTEXT_COLUMN);
-            String rightContext = record.getString(TASK_RIGHT_CONTEXT_COLUMN);
-            boolean hasInstruction = record.getBoolean(TASK_HAS_INSTRUCTION_COLUMN);
-            result.add(new Task(id, type, target, leftContext, rightContext, hasInstruction));
+        if(cursor != null) {
+            if(cursor.moveToFirst()) {
+                do {
+                    int id = cursor.getInt(cursor.getColumnIndex(TASK_ID_COLUMN));
+                    String target = cursor.getString(cursor.getColumnIndex(TASK_TARGET_COLUMN));
+                    String leftContext = cursor.getString(
+                            cursor.getColumnIndex(TASK_LEFT_CONTEXT_COLUMN));
+                    String rightContext = cursor.getString(
+                            cursor.getColumnIndex(TASK_RIGHT_CONTEXT_COLUMN));
+                    boolean hasInstruction = cursor.getInt(
+                            cursor.getColumnIndex(TASK_HAS_INSTRUCTION_COLUMN)) > 0;
+                    result.add(new Task(id, type, target, leftContext,
+                                        rightContext, hasInstruction));
+                } while(cursor.moveToNext());
+            }
+
+            cursor.close();
         }
 
-        cursor.close();
         long diffTime = System.currentTimeMillis() - startTime;
         Log.i(LOG_TAG, "Task by type receiving completed. Count: "
                 + result.size() + " . Time(ms): " + diffTime);

@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Bundle;
 import android.util.Log;
 
 import org.opencorpora.data.DatabaseHelper;
@@ -60,16 +59,19 @@ public class TypesQueryHelper {
                         TASK_TYPE_NAME_COLUMN,
                         TASK_TYPE_COMPLEXITY_COLUMN
                 }, null, null, null, null, null);
-        cursor.moveToFirst();
-        while(!cursor.isAfterLast()) {
-            Bundle record = cursor.getExtras();
-            int id = record.getInt(TASK_TYPE_ID_COLUMN);
-            String name = record.getString(TASK_TYPE_NAME_COLUMN);
-            int complexity = record.getInt(TASK_TYPE_COMPLEXITY_COLUMN);
-            TaskType type = new TaskType(id, name, complexity);
-            result.put(id, type);
+        if(cursor != null) {
+            if(cursor.moveToFirst()) {
+                do {
+                    int id = cursor.getInt(cursor.getColumnIndex(TASK_TYPE_ID_COLUMN));
+                    String name = cursor.getString(cursor.getColumnIndex(TASK_TYPE_NAME_COLUMN));
+                    int complexity = cursor.getInt(cursor.getColumnIndex(TASK_TYPE_COMPLEXITY_COLUMN));
+                    TaskType type = new TaskType(id, name, complexity);
+                    result.put(id, type);
+                } while(cursor.moveToNext());
+            }
+
+            cursor.close();
         }
-        cursor.close();
 
         long timeDiff = System.currentTimeMillis() - startTime;
         Log.i(LOG_TAG, "Types load complete. Count: " + result.size()
