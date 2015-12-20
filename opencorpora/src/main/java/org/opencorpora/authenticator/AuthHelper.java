@@ -25,14 +25,14 @@ class AuthHelper {
 
     private Context mContext;
 
-    public AuthHelper(Context context){
+    public AuthHelper(Context context) {
         mContext = context;
     }
 
-    public String singIn(final String username, final String password){
+    public String singIn(final String username, final String password) {
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
         JsonObjectRequest request =
-                new JsonObjectRequest(Request.Method.POST ,AUTH_URL, future, future){
+                new JsonObjectRequest(Request.Method.POST ,AUTH_URL, future, future) {
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String, String> params = new HashMap<>();
                         params.put("login", username);
@@ -43,7 +43,7 @@ class AuthHelper {
         OpenCorporaRequestQueue.getInstance(mContext).getRequestQueue().add(request);
         String token = null;
 
-        try{
+        try {
             JSONObject response = future.get(10, TimeUnit.SECONDS);
             token = response.getString("token");
             Log.i(LOG_TAG, "Auth request successfully complete. Token: " + token);

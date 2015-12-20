@@ -46,7 +46,7 @@ public class OpenCorporaActivity extends Activity {
         mTextView.setText("Found: " + accounts.length + " opencorpora accounts.");
     }
 
-    public void loadTypes(View view){
+    public void loadTypes(View view) {
 
         mTextView.setText("Total types count = ");
     }

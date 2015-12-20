@@ -67,7 +67,7 @@ public class Task extends BaseTask {
         mChoices.put(number, value);
     }
 
-    public void setChoices(HashMap<Integer, String> choices){
+    public void setChoices(HashMap<Integer, String> choices) {
         mChoices = choices;
     }
 

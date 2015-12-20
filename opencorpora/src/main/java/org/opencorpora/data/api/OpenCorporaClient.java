@@ -35,21 +35,21 @@ public class OpenCorporaClient {
 
     private OpenCorporaRequestQueue mQueue;
 
-    public OpenCorporaClient(Context context){
+    public OpenCorporaClient(Context context) {
         mQueue = OpenCorporaRequestQueue.getInstance(context);
     }
 
-    public ArrayList<TaskType> getTypes(final String uid, final String token){
+    public ArrayList<TaskType> getTypes(final String uid, final String token) {
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
         String url = String.format(TYPES_FORMAT_URL, uid, token);
         JsonObjectRequest request =
                 new JsonObjectRequest(Request.Method.GET , url, future, future);
         mQueue.getRequestQueue().add(request);
         ArrayList<TaskType> result = new ArrayList<>();
-        try{
+        try {
             JSONObject response = future.get(10, TimeUnit.SECONDS);
             JSONArray types = response.getJSONArray("items");
-            for(int i = 0; i < types.length(); ++i){
+            for(int i = 0; i < types.length(); ++i) {
                 int id = types.getJSONObject(i).getInt("type_id");
                 String name = types.getJSONObject(i).getString("name");
                 int complexity = types.getJSONObject(i).getInt("complexity");
@@ -67,7 +67,7 @@ public class OpenCorporaClient {
     // Returns only actual tasks
     public ArrayList<Integer> actualizeTasks(ArrayList<Integer> taskIds,
                                              final String uid,
-                                             final String token){
+                                             final String token) {
         String url = String.format(ACTUALIZE_FORMAT_URL, uid, token);
         ArrayList<Integer> result = new ArrayList<>();
         JSONObject taskIdsBody = new JSONObject();
@@ -83,7 +83,7 @@ public class OpenCorporaClient {
             JSONObject response = future.get(10, TimeUnit.SECONDS);
             Log.i(LOG_TAG, "Actualize tasks response received.");
             JSONArray actual = response.getJSONArray("items");
-            for(int i = 0; i < actual.length(); ++i){
+            for(int i = 0; i < actual.length(); ++i) {
                 int id = actual.getInt(i);
                 result.add(id);
             }
@@ -96,14 +96,14 @@ public class OpenCorporaClient {
         return result;
     }
 
-    public ArrayList<Task> getTasksByType(String uid, String token, TaskType type){
+    public ArrayList<Task> getTasksByType(String uid, String token, TaskType type) {
         return getTasksByType(uid, token, type, 20); // ToDo: move magic number
     }
 
     public ArrayList<Task> getTasksByType(final String uid,
                                           final String token,
                                           final TaskType type,
-                                          final int count){
+                                          final int count) {
         String url = String.format(TASKS_BY_TYPE_FORMAT_URL, uid, token, type.getId(), count);
         ArrayList<Task> result = new ArrayList<>();
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
@@ -114,7 +114,7 @@ public class OpenCorporaClient {
         try {
             JSONObject response = future.get(10, TimeUnit.SECONDS);
             JSONArray items = response.getJSONArray("items");
-            for(int i = 0; i < items.length(); ++i){
+            for(int i = 0; i < items.length(); ++i) {
                 JSONObject task = items.getJSONObject(i);
                 int id = task.getInt("id");
                 String target = task.getString("target");
@@ -135,7 +135,7 @@ public class OpenCorporaClient {
 
     public boolean putReadyTasks(final String uid,
                                  final String token,
-                                 ArrayList<SolvedTask> readyTasks){
+                                 ArrayList<SolvedTask> readyTasks) {
         if(readyTasks.size() == 0) return true;
         String url = String.format(PUT_READY_TASKS_FORMAT_URL, uid, token);
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
@@ -187,7 +187,7 @@ public class OpenCorporaClient {
     private HashMap<Integer, String> parseChoices(JSONArray choices) throws JSONException {
         HashMap<Integer, String> result = new HashMap<>();
 
-        for(int i = 0; i < choices.length(); ++i){
+        for(int i = 0; i < choices.length(); ++i) {
             JSONObject choice = choices.getJSONObject(i);
             Iterator<String> keys = choice.keys();
             String key = keys.next();

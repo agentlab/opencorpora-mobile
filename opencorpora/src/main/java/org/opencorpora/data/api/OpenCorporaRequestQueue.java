@@ -14,21 +14,21 @@ public class OpenCorporaRequestQueue {
     private static Context mContext;
     private RequestQueue mRequestQueue;
 
-    private OpenCorporaRequestQueue(Context context){
+    private OpenCorporaRequestQueue(Context context) {
         mContext = context;
         mRequestQueue = getRequestQueue();
     }
 
-    public static synchronized OpenCorporaRequestQueue getInstance(Context context){
-        if(mInstance == null){
+    public static synchronized OpenCorporaRequestQueue getInstance(Context context) {
+        if(mInstance == null) {
             mInstance = new OpenCorporaRequestQueue(context);
         }
 
         return mInstance;
     }
 
-    public RequestQueue getRequestQueue(){
-        if(mRequestQueue == null){
+    public RequestQueue getRequestQueue() {
+        if(mRequestQueue == null) {
             Cache cache = new DiskBasedCache(mContext.getCacheDir(), 1024 * 1024);
             Network network = new BasicNetwork(new HurlStack());
             mRequestQueue = new RequestQueue(cache, network);

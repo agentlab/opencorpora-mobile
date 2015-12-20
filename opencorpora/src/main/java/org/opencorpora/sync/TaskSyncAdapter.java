@@ -54,7 +54,7 @@ public class TaskSyncAdapter extends AbstractThreadedSyncAdapter {
             e.printStackTrace();
         }
 
-        if(token == null){
+        if(token == null) {
             Log.w(LOG_TAG, "Sync failed. Unauthorized.");
             return;
         }
