@@ -3,7 +3,6 @@ package org.opencorpora.data.api;
 import android.content.Context;
 import android.util.Log;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
@@ -19,17 +18,20 @@ import org.opencorpora.data.TaskType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class OpenCorporaClient {
     private static final String LOG_TAG = "OpenCorporaClient";
-    private static final String TYPES_URL = BuildConfig.server_address + "api/pool_types.php";
-    private static final String ACTUALIZE_URL = BuildConfig.server_address + "api/tasks.php";
-    private static final String TASKS_BY_TYPE_URL = BuildConfig.server_address + "api/tasks.php";
-    private static final String PUT_READY_TASKS_URL = BuildConfig.server_address + "api/tasks.php";
+    private static final String TYPES_FORMAT_URL = BuildConfig.server_address
+            + "api/pool_types.php?uid=%s&token=%s";
+    private static final String ACTUALIZE_FORMAT_URL = BuildConfig.server_address
+            + "api/tasks.php?uid=%s&token=%s";
+    private static final String TASKS_BY_TYPE_FORMAT_URL = BuildConfig.server_address
+            + "api/tasks.php?uid=%s&token=%s&type=%d&count=%d\"";
+    private static final String PUT_READY_TASKS_FORMAT_URL = BuildConfig.server_address
+            + "api/tasks.php?uid=%s&token=%s";
 
     private OpenCorporaRequestQueue mQueue;
 
@@ -39,15 +41,9 @@ public class OpenCorporaClient {
 
     public ArrayList<TaskType> getTypes(final String uid, final String token){
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
+        String url = String.format(TYPES_FORMAT_URL, uid, token);
         JsonObjectRequest request =
-                new JsonObjectRequest(Request.Method.GET ,TYPES_URL, future, future){
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String, String> params = new HashMap<>();
-                        params.put("uid", uid);
-                        params.put("token", token);
-                        return params;
-                    }
-                };
+                new JsonObjectRequest(Request.Method.GET , url, future, future);
         mQueue.getRequestQueue().add(request);
         ArrayList<TaskType> result = new ArrayList<>();
         try{
@@ -72,6 +68,7 @@ public class OpenCorporaClient {
     public ArrayList<Integer> actualizeTasks(ArrayList<Integer> taskIds,
                                              final String uid,
                                              final String token){
+        String url = String.format(ACTUALIZE_FORMAT_URL, uid, token);
         ArrayList<Integer> result = new ArrayList<>();
         JSONObject taskIdsBody = new JSONObject();
         JSONArray array = new JSONArray(taskIds);
@@ -79,18 +76,8 @@ public class OpenCorporaClient {
             taskIdsBody.put("items", array);
             RequestFuture<JSONObject> future = RequestFuture.newFuture();
             JsonObjectRequest request =
-                    new JsonObjectRequest(Request.Method.POST ,
-                            ACTUALIZE_URL,
-                            taskIdsBody,
-                            future,
-                            future){
-                        protected Map<String, String> getParams() throws AuthFailureError {
-                            Map<String, String> params = new HashMap<>();
-                            params.put("uid", uid);
-                            params.put("token", token);
-                            return params;
-                        }
-                    };
+                    new JsonObjectRequest(Request.Method.POST,
+                            url, taskIdsBody, future, future);
             mQueue.getRequestQueue().add(request);
 
             JSONObject response = future.get(10, TimeUnit.SECONDS);
@@ -117,22 +104,11 @@ public class OpenCorporaClient {
                                           final String token,
                                           final TaskType type,
                                           final int count){
+        String url = String.format(TASKS_BY_TYPE_FORMAT_URL, uid, token, type.getId(), count);
         ArrayList<Task> result = new ArrayList<>();
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
         JsonObjectRequest request =
-                new JsonObjectRequest(Request.Method.GET,
-                        TASKS_BY_TYPE_URL,
-                        future,
-                        future){
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String, String> params = new HashMap<>();
-                        params.put("uid", uid);
-                        params.put("token", token);
-                        params.put("type", String.valueOf(type.getId()));
-                        params.put("count", String.valueOf(count));
-                        return params;
-                    }
-                };
+                new JsonObjectRequest(Request.Method.GET, url, future, future);
         mQueue.getRequestQueue().add(request);
 
         try {
@@ -158,9 +134,10 @@ public class OpenCorporaClient {
     }
 
     public boolean putReadyTasks(final String uid,
-                              final String token,
-                              ArrayList<SolvedTask> readyTasks){
+                                 final String token,
+                                 ArrayList<SolvedTask> readyTasks){
         if(readyTasks.size() == 0) return true;
+        String url = String.format(PUT_READY_TASKS_FORMAT_URL, uid, token);
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
         JSONObject tasksJSON = new JSONObject();
         JSONArray tasksArray = new JSONArray();
@@ -184,29 +161,18 @@ public class OpenCorporaClient {
         }
 
         JsonObjectRequest request =
-                new JsonObjectRequest(Request.Method.PUT,
-                        PUT_READY_TASKS_URL,
-                        tasksJSON,
-                        future,
-                        future){
-                    @Override
-                    protected Map<String, String> getParams() {
-                        Map<String, String> params = new HashMap<>();
-                        params.put("uid", uid);
-                        params.put("token", token);
-                        return params;
-                    }
-                };
+                new JsonObjectRequest(Request.Method.PUT, url, tasksJSON, future, future);
+
         mQueue.getRequestQueue().add(request);
 
         boolean success = false;
 
         try {
             JSONObject response = future.get(10, TimeUnit.SECONDS);
-            if(response.has("error")){
+            if(response.has("error")) {
                 Log.w(LOG_TAG, "Task sending failed");
             }
-            else{
+            else {
                 Log.i(LOG_TAG,
                         "Ready tasks successfully posted. Count: " + readyTasks.size() + ".");
                 success = true;
