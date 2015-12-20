@@ -18,6 +18,7 @@ import org.opencorpora.data.TaskType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -104,7 +105,7 @@ public class OpenCorporaClient {
                                           final String token,
                                           final TaskType type,
                                           final int count) {
-        String url = String.format(TASKS_BY_TYPE_FORMAT_URL, uid, token, type.getId(), count);
+        String url = String.format(Locale.US, TASKS_BY_TYPE_FORMAT_URL, uid, token, type.getId(), count);
         ArrayList<Task> result = new ArrayList<>();
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
         JsonObjectRequest request =
@@ -137,7 +138,7 @@ public class OpenCorporaClient {
                                  final String token,
                                  ArrayList<SolvedTask> readyTasks) {
         if(readyTasks.size() == 0) return true;
-        String url = String.format(PUT_READY_TASKS_FORMAT_URL, uid, token);
+        String url = String.format(Locale.US, PUT_READY_TASKS_FORMAT_URL, uid, token);
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
         JSONObject tasksJSON = new JSONObject();
         JSONArray tasksArray = new JSONArray();
