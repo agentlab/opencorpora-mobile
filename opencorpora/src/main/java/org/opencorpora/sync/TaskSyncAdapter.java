@@ -13,12 +13,15 @@ import android.util.Log;
 
 import org.opencorpora.InternalContract;
 import org.opencorpora.data.SolvedTask;
+import org.opencorpora.data.Task;
 import org.opencorpora.data.TaskType;
+import org.opencorpora.data.api.OpenCorporaClient;
 import org.opencorpora.data.dal.TasksQueryHelper;
 import org.opencorpora.data.dal.TypesQueryHelper;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class TaskSyncAdapter extends AbstractThreadedSyncAdapter {
     private static final String LOG_TAG = "TaskSyncAdapter";
@@ -42,43 +45,50 @@ public class TaskSyncAdapter extends AbstractThreadedSyncAdapter {
                               SyncResult syncResult) {
         Log.i(LOG_TAG, "Start sync");
         long startTime = System.currentTimeMillis();
+        String token = null;
         try {
-            String token = AccountManager.get(mContext)
+            token = AccountManager.get(mContext)
                     .blockingGetAuthToken(account, InternalContract.AUTH_TOKEN_TYPE, false);
             Log.i(LOG_TAG, "Sync started for " + account.name + ". With token " + token);
         } catch (OperationCanceledException | IOException | AuthenticatorException e) {
             e.printStackTrace();
         }
 
-        // ToDo: send response for load available types
-        ArrayList<TaskType> types = new ArrayList<>(); // stub
+        if(token == null) {
+            Log.w(LOG_TAG, "Sync failed. Unauthorized.");
+            return;
+        }
+
+        HashMap<Integer, TaskType> oldTypes = mTypesHelper.loadTypes();
+        Log.i(LOG_TAG, "Old types count = " + oldTypes.size() + ".");
+
+        OpenCorporaClient client = new OpenCorporaClient(mContext);
+        ArrayList<TaskType> types = client.getTypes(account.name, token);
         mTypesHelper.updateTypes(types);
 
-        sendCompleted();
         ArrayList<Integer> tasksIds = mTasksHelper.getTaskIdsForActualize();
-        // ToDo: actualize tasksIds
-        tasksIds.clear();                                   // stub
-        ArrayList<Integer> old = new ArrayList<>(tasksIds); // stub
-        mTasksHelper.removeTasksByIds(old);
+        ArrayList<Integer> old = client.actualizeTasks(tasksIds, account.name, token);
+        tasksIds.removeAll(old);
+        mTasksHelper.removeTasksByIds(tasksIds);
 
-        long diffTime = System.currentTimeMillis() - startTime;
-        Log.i(LOG_TAG, "Sync completed in " + diffTime);
-    }
+        ArrayList<Task> tasks = client.getTasksByType(account.name, token, types.get(0));
+        mTasksHelper.saveTasks(tasks);
 
-    public void sendCompleted() {
-        ArrayList<SolvedTask> tasksForSend = mTasksHelper.getReadyTasks();
-        boolean success = false;
-        for (SolvedTask task : tasksForSend) {
-            Log.d(LOG_TAG, "Send task with id:" + task.getId());
-            // ToDo: implement logic for sending tasks to server
-            // Logic for send task to server
-            success = true;
-        }
+        ArrayList<SolvedTask> readyTasks = mTasksHelper.getReadyTasks();
+        SolvedTask ready = new SolvedTask(1, oldTypes.get(0));
+        ready.setComment("comment");
+        ready.setIsCommented(true);
+        ready.setIsRightContextShowed(true);
+        ready.setAnswer(1);
+        ready.setSecondsBeforeAnswer(10);
+        readyTasks.add(ready);
+        boolean success = client.putReadyTasks(account.name, token, readyTasks);
 
         if(success) {
-            mTasksHelper.deleteCompletedTasks(tasksForSend);
+            mTasksHelper.deleteCompletedTasks(readyTasks);
         }
 
-        Log.d(LOG_TAG, "Send ready tasks completed.");
+        long diffTime = System.currentTimeMillis() - startTime;
+        Log.i(LOG_TAG, "Sync completed in " + diffTime + " ms.");
     }
 }

@@ -20,7 +20,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authenticator);
         mAccountManager = AccountManager.get(this);
-        mServerAuthenticate = new AuthHelper();
+        mServerAuthenticate = new AuthHelper(this);
     }
 
     public void onClick(View view) {
@@ -34,7 +34,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         new AsyncTask<Void, Void, Intent>() {
             @Override
             protected Intent doInBackground(Void... params) {
-                String authToken = mServerAuthenticate.signIn(userName, userPass);
+                String authToken = mServerAuthenticate.singIn(userName, userPass);
                 final Intent res = new Intent();
                 res.putExtra(InternalContract.KEY_ACCOUNT_NAME, userName);
                 res.putExtra(InternalContract.KEY_ACCOUNT_TYPE, InternalContract.ACCOUNT_TYPE);

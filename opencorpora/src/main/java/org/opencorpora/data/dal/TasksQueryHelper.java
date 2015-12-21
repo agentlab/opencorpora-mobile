@@ -128,7 +128,6 @@ public class TasksQueryHelper {
         }
         db.setTransactionSuccessful();
         db.endTransaction();
-
         long diffTime = System.currentTimeMillis() - startTime;
         Log.i(LOG_TAG, "Removing not actual tasks by id completed. Count: "
                 + tasks.size() + ". Time(ms): " + diffTime);
@@ -140,6 +139,7 @@ public class TasksQueryHelper {
 
         db.beginTransaction();
         for (Task task : tasks) {
+            db.beginTransaction();
             ContentValues values = new ContentValues();
             values.put(TASK_ID_COLUMN, task.getId());
             values.put(TASK_TYPE_COLUMN, task.getType().getId());
@@ -158,6 +158,8 @@ public class TasksQueryHelper {
                 db.insert(CHOICE_TABLE_NAME, null, choiceValues);
             }
 
+            db.setTransactionSuccessful();
+            db.endTransaction();
             Log.d(LOG_TAG, "Task " + task.getId() + " successfully saved");
         }
 
