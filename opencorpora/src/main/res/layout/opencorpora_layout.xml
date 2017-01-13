@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:weightSum="1">
 
     <TextView
         android:id="@+id/text_view"
@@ -20,4 +21,20 @@
         android:layout_height="wrap_content"
         android:text="@string/count_button_text"
         android:onClick="tryAuth"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/push_me_button"
+        android:id="@+id/loadRecordsButton"
+        android:onClick="onLoadRecordsClick" />
+
+    <TextView
+        android:layout_width="289dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/recordsOutputTextView"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.18" />
 </LinearLayout>
